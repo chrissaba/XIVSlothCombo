@@ -8,6 +8,8 @@ using DalamudStatus = Dalamud.Game.ClientState.Statuses; // conflicts with struc
 using FFXIVClientStructs.FFXIV.Client.Game;
 using XIVSlothCombo.Services;
 using Dalamud.Plugin.Services;
+using FFXIVClientStructs.FFXIV.Client.Game.UI;
+using XIVSlothCombo.CustomComboNS.Functions;
 
 namespace XIVSlothCombo.Data
 {
@@ -15,6 +17,7 @@ namespace XIVSlothCombo.Data
     internal partial class CustomComboCache : IDisposable
     {
         private const uint InvalidObjectID = 0xE000_0000;
+        private ushort limitBreakValueCache;
 
         // Invalidate these
         private readonly Dictionary<(uint StatusID, uint? TargetID, uint? SourceID), DalamudStatus.Status?> statusCache = new();
@@ -43,6 +46,20 @@ namespace XIVSlothCombo.Data
 
             return (T)gauge;
         }
+        internal unsafe ushort GetLimitBreakValue()
+        {
+            if (limitBreakValueCache > 0)
+                return limitBreakValueCache;
+
+            UIState* uiState = UIState.Instance();
+            if (uiState == null)
+                return 0;
+
+
+           
+            return limitBreakValueCache = ((ushort)(((ushort)(uiState->LimitBreakController.CurrentValue))/((ushort)uiState->LimitBreakController.BarValue)*100));
+        }
+
 
         /// <summary> Finds a status on the given object. </summary>
         /// <param name="statusID"> Status effect ID. </param>
@@ -153,6 +170,7 @@ namespace XIVSlothCombo.Data
         {
             statusCache.Clear();
             cooldownCache.Clear();
+            limitBreakValueCache = 0;
         }
     }
 }

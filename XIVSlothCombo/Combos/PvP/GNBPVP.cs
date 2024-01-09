@@ -71,7 +71,7 @@ namespace XIVSlothCombo.Combos.PvP
                     }
 
                     // Gnashing Fang
-                    if (IsEnabled(CustomComboPreset.GNBPvP_DoubleDown) && HasEffect(Buffs.NoMercy) && IsOffCooldown(DoubleDown))
+                    if (IsEnabled(CustomComboPreset.GNBPvP_DoubleDown) && HasEffect(Buffs.NoMercy) && IsOffCooldown(DoubleDown) && !TargetHasEffect(PvPCommon.Buffs.Guard) &&InMeleeRange())
                         return DoubleDown;
 
                     if ((IsEnabled(CustomComboPreset.GNBPvP_ST_GnashingFang) && IsOffCooldown(GnashingFang) && HasEffect(Buffs.NoMercy)) ||

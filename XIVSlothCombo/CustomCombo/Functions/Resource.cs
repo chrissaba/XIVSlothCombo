@@ -20,5 +20,7 @@ namespace XIVSlothCombo.CustomComboNS.Functions
         /// <typeparam name="T"> Type of job gauge.</typeparam>
         /// <returns> The job gauge. </returns>
         public static T GetJobGauge<T>() where T : JobGaugeBase => Service.ComboCache.GetJobGauge<T>();
+        public static ushort GetLimitBreakValue() => Service.ComboCache.GetLimitBreakValue();
+
     }
 }

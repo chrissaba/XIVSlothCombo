@@ -27,7 +27,8 @@ namespace XIVSlothCombo.Combos.PvP
                 UmbralIce3 = 3215,
                 Burst = 3221,
                 SoulResonance = 3222,
-                Polyglot = 3169;
+                Polyglot = 3169,
+                Swiftcast = 1325;
         }
 
         public static class Debuffs
@@ -49,7 +50,7 @@ namespace XIVSlothCombo.Combos.PvP
                 {
                     bool canWeave = CanSpellWeave(actionID);
 
-                    if (HasEffect(Buffs.Polyglot))
+                    if (HasEffect(Buffs.Polyglot) && !TargetHasEffectAny(PvPCommon.Buffs.Guard))
                         return Foul;
 
                     if (IsEnabled(CustomComboPreset.BLMPvP_BurstMode_AetherialManip) &&
@@ -57,8 +58,8 @@ namespace XIVSlothCombo.Combos.PvP
                         !InMeleeRange() && IsOffCooldown(Burst) && canWeave)
                         return AetherialManipulation;
 
-                    if (InMeleeRange() &&
-                        IsOffCooldown(Burst))
+                    if ((InMeleeRange() &&
+                        IsOffCooldown(Burst)) && HasEffect(Buffs.Swiftcast))
                         return Burst;
 
                     if (!TargetHasEffect(Debuffs.AstralWarmth))
@@ -68,8 +69,8 @@ namespace XIVSlothCombo.Combos.PvP
                         IsOffCooldown(Paradox))
                         return Paradox;
 
-                    if (IsEnabled(CustomComboPreset.BLMPvP_BurstMode_NightWing) &&
-                        IsOffCooldown(NightWing))
+                    if ((IsEnabled(CustomComboPreset.BLMPvP_BurstMode_NightWing) &&
+                        IsOffCooldown(NightWing)) && (!TargetHasEffectAny(PvPCommon.Buffs.Guard) || !TargetHasEffectAny(PvPCommon.Buffs.Resilience)))
                         return NightWing;
 
                     if (FindTargetEffect(Debuffs.AstralWarmth).StackCount == 3 &&
@@ -83,7 +84,7 @@ namespace XIVSlothCombo.Combos.PvP
                 {
                     bool canWeave = CanSpellWeave(actionID);
 
-                    if (HasEffect(Buffs.Polyglot))
+                    if (HasEffect(Buffs.Polyglot) && !TargetHasEffectAny(PvPCommon.Buffs.Guard))
                         return Foul;
 
                     if (IsEnabled(CustomComboPreset.BLMPvP_BurstMode_AetherialManip) &&
@@ -93,8 +94,8 @@ namespace XIVSlothCombo.Combos.PvP
                         canWeave)
                         return AetherialManipulation;
 
-                    if (InMeleeRange() &&
-                        IsOffCooldown(Burst))
+                    if ((InMeleeRange() &&
+                        IsOffCooldown(Burst)) && HasEffect(Buffs.Swiftcast))
                         return Burst;
 
                     if (!TargetHasEffect(Debuffs.UmbralFreeze))
@@ -105,12 +106,12 @@ namespace XIVSlothCombo.Combos.PvP
                         return Paradox;
 
                     if (IsEnabled(CustomComboPreset.BLMPvP_BurstMode_NightWing) &&
-                        IsOffCooldown(NightWing))
+                        IsOffCooldown(NightWing) && (!TargetHasEffectAny(PvPCommon.Buffs.Guard) || !TargetHasEffectAny(PvPCommon.Buffs.Resilience)))
                         return NightWing;
 
                     if (FindTargetEffect(Debuffs.UmbralFreeze).StackCount == 3 &&
                         GetCooldown(Superflare).RemainingCharges > 0 &&
-                        !TargetHasEffect(Debuffs.DeepFreeze))
+                        !TargetHasEffect(Debuffs.DeepFreeze) && (!TargetHasEffectAny(PvPCommon.Buffs.Guard) || !TargetHasEffectAny(PvPCommon.Buffs.Resilience)))
                         return Superflare;
                 }
 

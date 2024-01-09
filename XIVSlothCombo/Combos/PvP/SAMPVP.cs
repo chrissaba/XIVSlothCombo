@@ -1,6 +1,9 @@
-﻿using XIVSlothCombo.Combos.PvE;
+﻿using Dalamud.Game.ClientState.Objects.SubKinds;
+using FFXIVClientStructs.FFXIV.Client.Game.UI;
+using XIVSlothCombo.Combos.PvE;
 using XIVSlothCombo.Core;
 using XIVSlothCombo.CustomComboNS;
+
 
 namespace XIVSlothCombo.Combos.PvP
 {
@@ -29,7 +32,8 @@ namespace XIVSlothCombo.Combos.PvP
         {
             public const ushort
                 Kaiten = 3201,
-                Midare = 3203;
+                Midare = 3203,
+                Chiten = 1240;
         }
 
         public static class Debuffs
@@ -57,10 +61,15 @@ namespace XIVSlothCombo.Combos.PvP
                 if ((IsNotEnabled(CustomComboPreset.SAMPvP_BurstMode_MainCombo) && actionID == MeikyoShisui) ||
                     (IsEnabled(CustomComboPreset.SAMPvP_BurstMode_MainCombo) && actionID is Yukikaze or Gekko or Kasha or Hyosetsu or Oka or Mangetsu))
                 {
+                    if (TargetHasEffectAny(SAMPvP.Buffs.Chiten) || TargetHasEffectAny(PLDPvP.Buffs.HallowedGround) || TargetHasEffectAny(DRKPvP.Buffs.UndeadRedemption) || TargetHasEffectAny(PLDPvP.Buffs.Covered))
+                        return OriginalHook(11);
 
                     if (!TargetHasEffectAny(PvPCommon.Buffs.Guard))
                     {
-                        if (IsOffCooldown(MeikyoShisui))
+                        if (IsEnabled(CustomComboPreset.SAMPvP_BurstMode_Stun) && IsOffCooldown(Mineuchi) && !TargetHasEffectAny(PvPCommon.Buffs.Resilience) && !(TargetHasEffectAny(PvPCommon.Debuffs.Stun) || TargetHasEffectAny(PvPCommon.Debuffs.Bind) || TargetHasEffectAny(PvPCommon.Debuffs.DeepFreeze)))
+                            return OriginalHook(Mineuchi);
+
+                        if (IsOffCooldown(MeikyoShisui) && OriginalHook(OgiNamikiri)!=Kaeshi)
                             return OriginalHook(MeikyoShisui);
 
                         if (IsEnabled(CustomComboPreset.SAMPvP_BurstMode_Chiten) && IsOffCooldown(Chiten) && InCombat() && PlayerHealthPercentageHp() <= 95)
@@ -69,21 +78,24 @@ namespace XIVSlothCombo.Combos.PvP
                         if (GetCooldownRemainingTime(Soten) < 1 && CanWeave(Yukikaze))
                             return OriginalHook(Soten);
 
-                        if (OriginalHook(MeikyoShisui) == Midare && !IsMoving)
+                        if (OriginalHook(MeikyoShisui) == Midare)
                             return OriginalHook(MeikyoShisui);
 
-                        if (IsEnabled(CustomComboPreset.SAMPvP_BurstMode_Stun) && IsOffCooldown(Mineuchi))
-                            return OriginalHook(Mineuchi);
-
-                        if (IsOffCooldown(OgiNamikiri) && !IsMoving)
+                        if (IsOffCooldown(OgiNamikiri) && OriginalHook(MeikyoShisui)!= Midare)
                             return OriginalHook(OgiNamikiri);
 
-                        if (GetRemainingCharges(Soten) > sotenCharges && CanWeave(Yukikaze))
+                        if (IsOnCooldown(OgiNamikiri)&&(GetRemainingCharges(Soten) > sotenCharges && CanWeave(Yukikaze)))
                             return OriginalHook(Soten);
 
                         if (OriginalHook(OgiNamikiri) == Kaeshi)
                             return OriginalHook(OgiNamikiri);
                     }
+                    if (TargetHasEffectAny(PvPCommon.Buffs.Guard) && OriginalHook(OgiNamikiri) == Kaeshi)
+                        return OriginalHook(11);
+                }
+                {
+                    if (TargetHasEffectAny(SAMPvP.Debuffs.Kuzushi) && GetLimitBreakValue()==100 && !TargetHasEffectAny(PLDPvP.Buffs.HallowedGround) && !TargetHasEffectAny(DRKPvP.Buffs.UndeadRedemption))
+                        return OriginalHook(Zantetsuken);
                 }
 
                 return actionID;
@@ -100,7 +112,7 @@ namespace XIVSlothCombo.Combos.PvP
 
                 if (actionID is Yukikaze or Gekko or Kasha or Hyosetsu or Mangetsu or Oka)
                 {
-                    if (!InMeleeRange())
+                    if (!InMeleeRange() && actionID != SAMPvP.OgiNamikiri)
                     {
                         if (IsEnabled(CustomComboPreset.SAMPvP_KashaFeatures_GapCloser) && GetRemainingCharges(Soten) > 0 && GetTargetHPPercent() <= SamSotenHP)
                             return OriginalHook(Soten);

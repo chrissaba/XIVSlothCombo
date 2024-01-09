@@ -1,5 +1,6 @@
-﻿using XIVSlothCombo.CustomComboNS;
-
+﻿using FFXIVClientStructs.FFXIV.Client.Game.UI;
+using XIVSlothCombo.CustomComboNS;
+using XIVSlothCombo.CustomComboNS.Functions;
 namespace XIVSlothCombo.Combos.PvP
 {
     internal static class NINPvP
@@ -25,14 +26,14 @@ namespace XIVSlothCombo.Combos.PvP
             Huton = 29512,
             Doton = 29514,
             Assassinate = 29503;
-
         internal class Buffs
         {
             internal const ushort
                 ThreeMudra = 1317,
                 Hidden = 1316,
                 Bunshin = 2010,
-                ShadeShift = 2011;
+                ShadeShift = 2011,
+                UnsealedSeitonTenchu = 3192;
         }
 
         internal class Debuffs
@@ -59,6 +60,8 @@ namespace XIVSlothCombo.Combos.PvP
 
             protected override uint Invoke(uint actionID, uint lastComboActionID, float comboTime, byte level)
             {
+
+
                 if (actionID is SpinningEdge or GustSlash or AeolianEdge)
                 {
                     var threeMudrasCD = GetCooldown(ThreeMudra);
@@ -77,11 +80,14 @@ namespace XIVSlothCombo.Combos.PvP
                     var maxHPThreshold = jobMaxHp - 8000;
                     var remainingPercentage = (float)LocalPlayer.CurrentHp / (float)maxHPThreshold;
                     bool inMeisuiRange = threshold >= (remainingPercentage * 100);
-
+                    var targethp = GetTargetHPPercent();
 
                     if (HasEffect(Buffs.Hidden))
                         return OriginalHook(Assassinate);
-
+                    if (CustomComboFunctions.GetLimitBreakValue() == 100 && targethp < 50 && targethp > 0)
+                        return OriginalHook(SeitonTenchu);
+                    if (HasEffect(Buffs.UnsealedSeitonTenchu) && targethp < 50 && targethp > 0)
+                        return OriginalHook(SeitonTenchu);
                     if (canWeave)
                     {
                         if (InMeleeRange() && !GetCooldown(Mug).IsCooldown)
@@ -98,12 +104,14 @@ namespace XIVSlothCombo.Combos.PvP
                     {
                         if (IsEnabled(CustomComboPreset.NINPvP_ST_Meisui) && inMeisuiRange && !meisuiLocked)
                             return OriginalHook(Meisui);
+                        if (IsEnabled(CustomComboPreset.NINPvP_ST_Meisui) && inMeisuiRange && !hutonLocked)
+                            return OriginalHook(Huton);
+
+                        if (!raijuLocked && !TargetHasEffectAny(PvPCommon.Buffs.Guard))
+                            return OriginalHook(ForkedRaiju);
 
                         if (!hyoshoLocked)
                             return OriginalHook(HyoshoRanryu);
-
-                        if (!raijuLocked && bunshinStacks > 0)
-                            return OriginalHook(ForkedRaiju);
 
                         if (!hutonLocked)
                             return OriginalHook(Huton);
@@ -124,6 +132,8 @@ namespace XIVSlothCombo.Combos.PvP
 
             protected override uint Invoke(uint actionID, uint lastComboActionID, float comboTime, byte level)
             {
+
+
                 if (actionID == FumaShuriken)
                 {
                     var threeMudrasCD = GetCooldown(ThreeMudra);
@@ -142,7 +152,7 @@ namespace XIVSlothCombo.Combos.PvP
                     var maxHPThreshold = jobMaxHp - 8000;
                     var remainingPercentage = (float)LocalPlayer.CurrentHp / (float)maxHPThreshold;
                     bool inMeisuiRange = threshold >= (remainingPercentage * 100);
-
+                    var targethp = GetTargetHPPercent();
                     if (HasEffect(Buffs.Hidden))
                         return OriginalHook(Assassinate);
 

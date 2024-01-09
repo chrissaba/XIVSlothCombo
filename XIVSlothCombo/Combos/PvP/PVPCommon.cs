@@ -39,12 +39,13 @@ namespace XIVSlothCombo.Combos.PvP
         internal class Buffs
         {
             public const ushort
-                Guard = 3054;
+            Resilience = 3248,
+            Guard = 3054;
         }
 
         // Lists of Excluded skills 
         internal static readonly List<uint>
-            MovmentSkills = new() { WARPvP.Onslaught, NINPvP.Shukuchi, DNCPvP.EnAvant, MNKPvP.ThunderClap, RDMPvP.CorpsACorps, RDMPvP.Displacement, SGEPvP.Icarus, RPRPvP.HellsIngress, RPRPvP.Regress, BRDPvP.RepellingShot, BLMPvP.AetherialManipulation, DRGPvP.ElusiveJump, GNBPvP.RoughDivide },
+            MovmentSkills = new() { WARPvP.Onslaught, NINPvP.Shukuchi, DNCPvP.EnAvant, MNKPvP.ThunderClap, RDMPvP.CorpsACorps, RDMPvP.Displacement, SGEPvP.Icarus, RPRPvP.HellsIngress, RPRPvP.Regress, BRDPvP.RepellingShot, BLMPvP.AetherialManipulation, DRGPvP.ElusiveJump, GNBPvP.RoughDivide, 29130, 29469, 29537, 29553, 29497, 29499, 29097, 29415, 29704, 29515, 29266, 29260, 29512, 29508, DRKPvP.BlackestNight, GNBPvP.JunctionedCast, DRGPvP.HorridRoar, SAMPvP.Soten, SAMPvP.Chiten, MNKPvP.RiddleOfEarth, MNKPvP.EarthsReply, DNCPvP.CuringWaltz, DNCPvP.Contradance, PLDPvP.Phalanx, PLDPvP.HolySheltron, DRKPvP.Quietus, DRKPvP.SaltAndDarkness, DRKPvP.SaltedEarth, DRKPvP.Plunge },
             GlobalSkills = new() { Teleport, Guard, Recuperate, Purify, StandardElixir, Sprint };
 
         internal class GlobalEmergencyHeals : CustomCombo
@@ -53,19 +54,29 @@ namespace XIVSlothCombo.Combos.PvP
 
             protected override uint Invoke(uint actionID, uint lastComboActionID, float comboTime, byte level)
             {
-                if ((HasEffect(Buffs.Guard) || JustUsed(Guard)) && IsEnabled(CustomComboPreset.PvP_MashCancel))
+                if (HasEffect(Buffs.Guard) && IsEnabled(CustomComboPreset.PvP_MashCancel))
                 {
-                    if (actionID == Guard) return Guard;
-                    else return OriginalHook(11);
+                    if (ExemptionList.Contains(actionID) || GlobalEmergencyGuardSkills.Contains(actionID) || GlobalEmergencyGuardMovementSkills.Contains(actionID))
+                    {
+                        return actionID; //allow for an exemption list
+                    }
+                    else
+                    {
+                        return OriginalHook(11); //execute the original action
+                    }
                 }
+                else if (!HasEffect(Buffs.Guard)) // only replace if the buff is active
+                {
 
-                if (Execute() &&
-                     InPvP() &&
-                    !GlobalSkills.Contains(actionID) &&
-                    !MovmentSkills.Contains(actionID))
-                    return OriginalHook(Recuperate);
+                    if (Execute() &&
+                         InPvP() &&
+                        !GlobalSkills.Contains(actionID) &&
+                        !MovmentSkills.Contains(actionID))
+                        return OriginalHook(Recuperate);
 
-                return actionID;
+                    return actionID;
+                }
+                return actionID; //return the original action if guard and unguarded buffs are not active
             }
 
             public bool Execute()
@@ -93,19 +104,28 @@ namespace XIVSlothCombo.Combos.PvP
 
             protected override uint Invoke(uint actionID, uint lastComboActionID, float comboTime, byte level)
             {
-                if ((HasEffect(Buffs.Guard) || JustUsed(Guard)) && IsEnabled(CustomComboPreset.PvP_MashCancel))
+                if (HasEffect(Buffs.Guard) && IsEnabled(CustomComboPreset.PvP_MashCancel))
                 {
-                    if (actionID == Guard) return Guard;
-                    else return OriginalHook(11);
+                    if (ExemptionList.Contains(actionID) || GlobalEmergencyGuardSkills.Contains(actionID) || GlobalEmergencyGuardMovementSkills.Contains(actionID))
+                    {
+                        return actionID; //allow for an exemption list
+                    }
+                    else
+                    {
+                        return OriginalHook(11); //execute the original action
+                    }
                 }
+                else if (!HasEffect(Buffs.Guard)) // only replace if the buff is active
+                {
 
-                if (Execute() &&
-                    InPvP() &&
-                    !GlobalSkills.Contains(actionID) &&
-                    !MovmentSkills.Contains(actionID))
-                    return OriginalHook(Guard);
+                    if (Execute() &&
+                        InPvP() &&
+                        !GlobalSkills.Contains(actionID) &&
+                        !MovmentSkills.Contains(actionID))
+                        return OriginalHook(Guard);
 
-                return actionID;
+                }
+                return actionID; //return the original action if guard and unguarded buffs are not active
             }
 
             public bool Execute()
@@ -122,9 +142,25 @@ namespace XIVSlothCombo.Combos.PvP
                 if (remainingPercentage * 100 > threshold) return false;
 
                 return true;
-
             }
         }
+        //Add the fields needed for the changes.
+        internal static readonly List<uint>
+                    GlobalEmergencyGuardSkills = new List<uint>()
+                    {
+                        Teleport, Guard, Recuperate, Purify, StandardElixir
+                    };
+        internal static readonly List<uint>
+                    GlobalEmergencyGuardMovementSkills = new List<uint>()
+                    {
+                     Sprint
+                    };
+        internal static readonly List<uint>
+                    ExemptionList = new List<uint>()
+                    {
+ WARPvP.Onslaught, NINPvP.Shukuchi, DNCPvP.EnAvant, MNKPvP.ThunderClap, RDMPvP.CorpsACorps, RDMPvP.Displacement, SGEPvP.Icarus, RPRPvP.HellsIngress, RPRPvP.Regress, BRDPvP.RepellingShot, BLMPvP.AetherialManipulation, DRGPvP.ElusiveJump, GNBPvP.RoughDivide, 29130, 29469, 29537, 29553, 29497, 29499, 29097, 29415, 29704, 29515, 29266, 29260, 29512, 29508, DRKPvP.BlackestNight, GNBPvP.JunctionedCast, DRGPvP.HorridRoar, SAMPvP.Soten, SAMPvP.Chiten, MNKPvP.RiddleOfEarth, MNKPvP.EarthsReply, DNCPvP.CuringWaltz, DNCPvP.Contradance, PLDPvP.Phalanx, PLDPvP.HolySheltron, DRKPvP.Quietus, DRKPvP.SaltedEarth, DRKPvP.SaltAndDarkness, DRKPvP.Plunge
+                    };
+
 
         internal class QuickPurify : CustomCombo
         {
@@ -132,16 +168,26 @@ namespace XIVSlothCombo.Combos.PvP
 
             protected override uint Invoke(uint actionID, uint lastComboActionID, float comboTime, byte level)
             {
-                if ((HasEffect(Buffs.Guard) || JustUsed(Guard)) && IsEnabled(CustomComboPreset.PvP_MashCancel))
+                if (HasEffect(Buffs.Guard) && IsEnabled(CustomComboPreset.PvP_MashCancel))
                 {
-                    if (actionID == Guard) return Guard;
-                    else return OriginalHook(11);
+                    if (ExemptionList.Contains(actionID) || GlobalEmergencyGuardSkills.Contains(actionID) || GlobalEmergencyGuardMovementSkills.Contains(actionID))
+                    {
+                        return actionID; //allow for an exemption list
+                    }
+                    else
+                    {
+                        return OriginalHook(11); //execute the original action
+                    }
                 }
+                else if (!HasEffect(Buffs.Guard)) // only replace if the buff is active
+                {
 
-                if (Execute() &&
+                    if (Execute() &&
                     InPvP() &&
                     !GlobalSkills.Contains(actionID))
                     return OriginalHook(Purify);
+
+                }
 
                 return actionID;
             }

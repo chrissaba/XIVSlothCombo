@@ -22,7 +22,7 @@ namespace XIVSlothCombo.Combos.PvP
             RiddleOfEarth = 29482,
             ThunderClap = 29484,
             EarthsReply = 29483,
-            Meteordrive = 29485;
+            Meteodrive = 29485;
 
         public static class Buffs
         {
@@ -46,6 +46,9 @@ namespace XIVSlothCombo.Combos.PvP
             {
                 if (actionID is Bootshine or TrueStrike or SnapPunch or DragonKick or TwinSnakes or Demolish or PhantomRush)
                 {
+
+                    if (TargetHasEffectAny(SAMPvP.Buffs.Chiten) || TargetHasEffectAny(PLDPvP.Buffs.HallowedGround) || TargetHasEffectAny(DRKPvP.Buffs.UndeadRedemption) ||TargetHasEffectAny(PLDPvP.Buffs.Covered))
+                        return OriginalHook(11);
 
                     if (!TargetHasEffectAny(PvPCommon.Buffs.Guard))
                     {
@@ -75,7 +78,18 @@ namespace XIVSlothCombo.Combos.PvP
                             if (IsOffCooldown(Enlightenment))
                                 return OriginalHook(Enlightenment);
                         }
+                        if ((EnemyHealthCurrentHp() < 30000 && EnemyHealthCurrentHp()>1) && GetLimitBreakValue()==100)
+                            return OriginalHook(Meteodrive);
+                        if ((EnemyHealthCurrentHp() < 36000 && EnemyHealthCurrentHp() > 1) && TargetHasEffectAny(Debuffs.PressurePoint) && GetLimitBreakValue() == 100)
+                            return OriginalHook(Meteodrive);
                     }
+                    if(GetLimitBreakValue() == 100 && TargetHasEffect(Debuffs.PressurePoint) && (EnemyHealthCurrentHp() < 24000 && EnemyHealthCurrentHp() > 1 )&& TargetHasEffectAny(PvPCommon.Buffs.Guard)) 
+                        return OriginalHook(Meteodrive);
+
+                    if(GetLimitBreakValue() == 100 && !TargetHasEffect(Debuffs.PressurePoint)&& (EnemyHealthCurrentHp() < 16000 && EnemyHealthCurrentHp() > 1) && TargetHasEffectAny(PvPCommon.Buffs.Guard))
+                        return OriginalHook(Meteodrive);
+                    
+
                 }
 
                 return actionID;

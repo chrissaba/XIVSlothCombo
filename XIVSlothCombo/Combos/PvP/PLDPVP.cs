@@ -11,8 +11,20 @@ namespace XIVSlothCombo.Combos.PvP
             RiotBlade = 29059,
             RoyalAuthority = 29060,
             ShieldBash = 29064,
-            Confiteor = 29070;
+            Confiteor = 29070,
+            HolySheltron = 29067,
+            Guardian = 29066,
+            Phalanx = 29069;
+            
+        internal class Buffs
+        {
+            internal const ushort
+                HallowedGround = 1302,
+                Covered = 1301,
+                BladeOfFaithReady = 3250;
+                
 
+        }
         internal class Debuffs
         {
             internal const ushort
@@ -27,8 +39,9 @@ namespace XIVSlothCombo.Combos.PvP
             {
                 if (actionID is FastBlade or RiotBlade or RoyalAuthority)
                 {
+
                     if (IsEnabled(CustomComboPreset.PLDPvP_ShieldBash) &&
-                        InCombat() && IsOffCooldown(ShieldBash) && CanWeave(actionID))
+                        InCombat() && IsOffCooldown(ShieldBash) && CanWeave(actionID) && !TargetHasEffectAny(PvPCommon.Buffs.Guard) && !TargetHasEffectAny(PvPCommon.Buffs.Resilience))
                         return ShieldBash;
                         
                     if (IsEnabled(CustomComboPreset.PLDPvP_Confiteor))
@@ -36,6 +49,11 @@ namespace XIVSlothCombo.Combos.PvP
                        if (IsOffCooldown(Confiteor))
                         return Confiteor;
                     }
+                    if (InCombat() && IsOffCooldown(HolySheltron) && CanWeave(actionID))
+                        return HolySheltron;
+                    if (HasEffect(Buffs.HallowedGround) && (OriginalHook(Phalanx) == 29071) || OriginalHook(Phalanx)==29072 || OriginalHook(Phalanx)==29073)
+                        return OriginalHook(Phalanx);
+
                 }
 
                 return actionID;

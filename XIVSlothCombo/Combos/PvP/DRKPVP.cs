@@ -66,8 +66,6 @@ namespace XIVSlothCombo.Combos.PvP
 
                     if (InMeleeRange())
                     {
-                        if (ActionReady(Quietus))
-                            return OriginalHook(Quietus);
 
                         if (comboTime > 1f)
                         {
