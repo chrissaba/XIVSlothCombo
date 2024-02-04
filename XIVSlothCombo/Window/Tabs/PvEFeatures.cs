@@ -18,18 +18,18 @@ namespace XIVSlothCombo.Window.Tabs
     {
         //internal static Dictionary<string, bool> showHeader = new Dictionary<string, bool>();
 
-        internal static List<float> allHeights = new();
+        internal static List<float> allHeights = [];
         internal static bool HasToOpenJob = true;
 
         internal static new void Draw()
         {
-#if !DEBUG
-            if (Service.ClassLocked)
+//#if !DEBUG
+            if (IconReplacer.ClassLocked())
             {
                 ImGui.Text("Equip your job stone to re-unlock features.");
                 return;
             }
-#endif
+//#endif
 
             ImGui.Text("This tab allows you to select which PvE combos and features you wish to enable.");
             ImGui.BeginChild("scrolling", new Vector2(ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y), true);
@@ -243,8 +243,8 @@ namespace XIVSlothCombo.Window.Tabs
 
                 if (Service.Configuration.HideConflictedCombos)
                 {
-                    var conflictOriginals = Service.Configuration.GetConflicts(preset); // Presets that are contained within a ConflictedAttribute
-                    var conflictsSource = Service.Configuration.GetAllConflicts();      // Presets with the ConflictedAttribute
+                    var conflictOriginals = PluginConfiguration.GetConflicts(preset); // Presets that are contained within a ConflictedAttribute
+                    var conflictsSource = PluginConfiguration.GetAllConflicts();      // Presets with the ConflictedAttribute
 
                     if (!conflictsSource.Where(x => x == preset).Any() || conflictOriginals.Length == 0)
                     {
@@ -277,6 +277,6 @@ namespace XIVSlothCombo.Window.Tabs
 
         internal static string? HeaderToOpen;
 
-        internal static Dictionary<string, Vector2> Positions = new();
+        internal static Dictionary<string, Vector2> Positions = [];
     }
 }

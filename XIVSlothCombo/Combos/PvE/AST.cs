@@ -69,8 +69,8 @@ namespace XIVSlothCombo.Combos.PvE
 
         //Action Groups
         internal static readonly List<uint>
-            MaleficList = new() { Malefic, Malefic2, Malefic3, Malefic4, FallMalefic },
-            GravityList = new() { Gravity, Gravity2 };
+            MaleficList = [Malefic, Malefic2, Malefic3, Malefic4, FallMalefic],
+            GravityList = [Gravity, Gravity2];
 
         internal static class Buffs
         {
@@ -130,6 +130,7 @@ namespace XIVSlothCombo.Combos.PvE
             public static UserInt
                 AST_LucidDreaming = new("ASTLucidDreamingFeature"),
                 AST_EssentialDignity = new("ASTCustomEssentialDignity"),
+                AST_ST_SimpleHeals_Esuna = new("AST_ST_SimpleHeals_Esuna"),
                 AST_DPS_AltMode = new("AST_DPS_AltMode"),
                 AST_DPS_DivinationOption = new("AST_DPS_DivinationOption"),
                 AST_DPS_LightSpeedOption = new("AST_DPS_LightSpeedOption"),
@@ -390,6 +391,19 @@ namespace XIVSlothCombo.Combos.PvE
                     : actionID;
         }
 
+        internal class AST_Cards_RedrawStandalone : CustomCombo
+        {
+            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AST_Cards_RedrawStandalone;
+
+            protected override uint Invoke(uint actionID, uint lastComboActionID, float comboTime, byte level)
+            {
+                if (actionID is Draw && HasEffect(Buffs.ClarifyingDraw))
+                    return Redraw;
+
+                return actionID;
+            }
+        }
+
         internal class AST_ST_SimpleHeals : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AST_ST_SimpleHeals;
@@ -401,6 +415,7 @@ namespace XIVSlothCombo.Combos.PvE
                     GameObject? healTarget = GetHealTarget(Config.AST_ST_SimpleHeals_Adv && Config.AST_ST_SimpleHeals_UIMouseOver);
 
                     if (IsEnabled(CustomComboPreset.AST_ST_SimpleHeals_Esuna) && ActionReady(All.Esuna) &&
+                        GetTargetHPPercent(healTarget) >= Config.AST_ST_SimpleHeals_Esuna &&
                         HasCleansableDebuff(healTarget))
                         return All.Esuna;
 

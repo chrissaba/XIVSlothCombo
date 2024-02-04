@@ -1,5 +1,7 @@
-﻿using Dalamud.Game.ClientState.Objects;
+﻿using Dalamud.Game.ClientState.Conditions;
+using Dalamud.Game.ClientState.Objects;
 using Dalamud.Hooking;
+using ECommons.DalamudServices;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using Lumina.Excel.GeneratedSheets;
@@ -29,17 +31,16 @@ namespace XIVSlothCombo.Data
         internal static Dictionary<uint, BNpcBase> BNpcSheet = Service.DataManager.GetExcelSheet<BNpcBase>()!
             .ToDictionary(i => i.RowId, i => i);
 
-        private static readonly Dictionary<string, List<uint>> statusCache = new();
+        private static readonly Dictionary<string, List<uint>> statusCache = [];
 
-        internal readonly static List<uint> CombatActions = new();
+        internal readonly static List<uint> CombatActions = [];
 
         private delegate void ReceiveActionEffectDelegate(int sourceObjectId, IntPtr sourceActor, IntPtr position, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail);
         private readonly static Hook<ReceiveActionEffectDelegate>? ReceiveActionEffectHook;
         private static void ReceiveActionEffectDetour(int sourceObjectId, IntPtr sourceActor, IntPtr position, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail)
         {
-            ReceiveActionEffectHook!.Original(sourceObjectId, sourceActor, position, effectHeader, effectArray, effectTrail);
-            TimeLastActionUsed = DateTime.Now;
             if (!CustomComboFunctions.InCombat()) CombatActions.Clear();
+            ReceiveActionEffectHook!.Original(sourceObjectId, sourceActor, position, effectHeader, effectArray, effectTrail);
             ActionEffectHeader header = Marshal.PtrToStructure<ActionEffectHeader>(effectHeader);
 
             if (ActionType is 13 or 2) return;
@@ -47,6 +48,7 @@ namespace XIVSlothCombo.Data
                 header.ActionId != 8 &&
                 sourceObjectId == Service.ClientState.LocalPlayer.ObjectId)
             {
+                TimeLastActionUsed = DateTime.Now;
                 LastActionUseCount++;
                 if (header.ActionId != LastAction)
                 {
@@ -113,7 +115,7 @@ namespace XIVSlothCombo.Data
                         targetObjectId = Combos.JobHelpers.AST.AST_QuickTargetCards.SelectedRandomMember.ObjectId;
                         break;
                     case 1:
-                        if (Service.ClientState.LocalPlayer.TargetObject is not null)
+                        if (CustomComboFunctions.HasFriendlyTarget())
                             targetObjectId = Service.ClientState.LocalPlayer.TargetObject.ObjectId;
                         else
                             targetObjectId = Combos.JobHelpers.AST.AST_QuickTargetCards.SelectedRandomMember.ObjectId;
@@ -125,7 +127,6 @@ namespace XIVSlothCombo.Data
                             targetObjectId = Combos.JobHelpers.AST.AST_QuickTargetCards.SelectedRandomMember.ObjectId;
                         break;
                 }
-
             }
         }
 
@@ -173,7 +174,7 @@ namespace XIVSlothCombo.Data
         {
             if (CombatActions.Count < 2) return false;
             var lastAction = CombatActions.Last();
-            var secondLastAction = CombatActions[CombatActions.Count - 2];
+            var secondLastAction = CombatActions[^2];
 
             return (GetAttackType(lastAction) == GetAttackType(secondLastAction) && GetAttackType(lastAction) == ActionAttackType.Ability);
         }
@@ -213,12 +214,26 @@ namespace XIVSlothCombo.Data
         {
             ReceiveActionEffectHook?.Enable();
             SendActionHook?.Enable();
+            Svc.Condition.ConditionChange += ResetActions;
+        }
+
+        private static void ResetActions(ConditionFlag flag, bool value)
+        {
+            if (flag == ConditionFlag.InCombat && !value)
+            {
+                CombatActions.Clear();
+                LastAbility = 0;
+                LastAction = 0;
+                LastWeaponskill = 0;
+                LastSpell = 0;
+            }
         }
 
         public static void Disable()
         {
             ReceiveActionEffectHook.Disable();
             SendActionHook?.Disable();
+            Svc.Condition.ConditionChange -= ResetActions;
         }
 
         public static int GetLevel(uint id) => ActionSheet.TryGetValue(id, out var action) && action.ClassJobCategory is not null ? action.ClassJobLevel : 255;
