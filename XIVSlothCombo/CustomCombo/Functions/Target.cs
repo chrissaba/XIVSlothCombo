@@ -119,7 +119,7 @@ namespace XIVSlothCombo.CustomComboNS.Functions
         /// If Party UI Mouseover is enabled, find the target and return that. Else return the player. </summary>
         /// <param name="checkMOPartyUI">Checks for a mouseover target.</param>
         /// <param name="restrictToMouseover">Forces only the mouseover target, may return null.</param>
-        /// <returns> GameObject of a player target. </returns>
+        /// <returns> IGameObject of a player target. </returns>
         public static unsafe IGameObject? GetHealTarget(bool checkMOPartyUI = false, bool restrictToMouseover = false)
         {
             IGameObject? healTarget = null;
@@ -131,9 +131,9 @@ namespace XIVSlothCombo.CustomComboNS.Functions
             if (checkMOPartyUI)
             {
                 StructsObject.GameObject* t = PartyTargetingService.UITarget;
-                if (t != null && t->ObjectKind != 0)
+                if (t != null && t->GetGameObjectId().ObjectId != 0)
                 {
-                    IGameObject? uiTarget =  Service.ObjectTable.Where(x => x.GameObjectId == t->ObjectIndex).FirstOrDefault();
+                    IGameObject? uiTarget =  Service.ObjectTable.Where(x => x.GameObjectId == t->GetGameObjectId().ObjectId).FirstOrDefault();
                     if (uiTarget != null && HasFriendlyTarget(uiTarget)) healTarget = uiTarget;
 
                     if (restrictToMouseover)
@@ -188,8 +188,8 @@ namespace XIVSlothCombo.CustomComboNS.Functions
         {
             StructsObject.GameObject* t = GetTarget(target);
             if (t == null) return;
-            long o = PartyTargetingService.GetObjectID(t);
-            IGameObject? p = Service.ObjectTable.Where(x => x.ObjectIndex == o).First();
+            ulong o = PartyTargetingService.GetObjectID(t);
+            IGameObject? p = Service.ObjectTable.Where(x => x.GameObjectId == o).First();
 
             if (IsInRange(p)) SetTarget(p);
         }
@@ -378,7 +378,6 @@ namespace XIVSlothCombo.CustomComboNS.Functions
         }
 
         internal unsafe static bool OutOfRange(uint actionID, IGameObject target) => ActionWatching.OutOfRange(actionID, (StructsObject.GameObject*)Service.ClientState.LocalPlayer.Address, (StructsObject.GameObject*)target.Address);
-
 
     }
 }

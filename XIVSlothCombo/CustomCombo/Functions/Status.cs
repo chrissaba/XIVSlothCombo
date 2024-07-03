@@ -27,7 +27,7 @@ namespace XIVSlothCombo.CustomComboNS.Functions
         /// <summary> Finds an effect on the player. The effect must be owned by the player or unowned. </summary>
         /// <param name="effectID"> Status effect ID. </param>
         /// <returns> Status object or null. </returns>
-        public static Status? FindEffect(ushort effectID, IGameObject? healTarget, ulong? gameObjectId) => FindEffect(effectID, LocalPlayer, LocalPlayer?.GameObjectId);
+        public static Status? FindEffect(ushort effectID) => FindEffect(effectID, LocalPlayer, LocalPlayer?.GameObjectId);
 
         /// <summary> Find if an effect on the target exists. The effect must be owned by the player or unowned. </summary>
         /// <param name="effectID"> Status effect ID. </param>
@@ -71,7 +71,7 @@ namespace XIVSlothCombo.CustomComboNS.Functions
         /// <param name="obj"> Object to look for effects on. </param>
         /// <param name="sourceID"> Source object ID. </param>
         /// <returns> Status object or null. </returns>
-        public static Status? FindEffect(ushort effectID, IGameObject? obj, uint? sourceID) => Service.ComboCache.GetStatus(effectID, obj, sourceID);
+        public static Status? FindEffect(ushort effectID, IGameObject? obj, ulong? sourceID) => Service.ComboCache.GetStatus(effectID, obj, sourceID);
 
         ///<summary> Checks a member object for an effect. The effect may be owned by anyone or unowned. </summary>
         /// <param name="effectID"> Status effect ID. </param>

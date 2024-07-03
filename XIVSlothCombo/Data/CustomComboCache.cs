@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using Dalamud.Game;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Objects.SubKinds;
@@ -21,7 +19,7 @@ namespace XIVSlothCombo.Data
         private ushort limitBreakValueCache;
 
         // Invalidate these
-        private readonly ConcurrentDictionary<(uint StatusID, uint? TargetID, uint? SourceID), DalamudStatus.Status?> statusCache = new();
+        private readonly ConcurrentDictionary<(uint StatusID, ulong? TargetID, ulong? SourceID), DalamudStatus.Status?> statusCache = new();
         private readonly ConcurrentDictionary<uint, CooldownData> cooldownCache = new();
 
         // Do not invalidate these
@@ -67,10 +65,10 @@ namespace XIVSlothCombo.Data
         /// <param name="obj"> Object to look for effects on. </param>
         /// <param name="sourceID"> Source object ID. </param>
         /// <returns> Status object or null. </returns>
-        internal DalamudStatus.Status? GetStatus(uint statusID, IGameObject? obj, uint? sourceID)
+        internal DalamudStatus.Status? GetStatus(uint statusID, IGameObject? obj, ulong? sourceID)
         {
             var key = (statusID, obj?.GameObjectId, sourceID);
-            if (statusCache.TryGetValue(((uint StatusID, uint? TargetID, uint? SourceID))key, out DalamudStatus.Status? found))
+            if (statusCache.TryGetValue(key, out DalamudStatus.Status? found))
                 return found;
 
             if (obj is null)
@@ -100,46 +98,18 @@ namespace XIVSlothCombo.Data
             if (actionManager == null)
                 return cooldownCache[actionID] = default;
 
-            byte cooldownGroup = GetCooldownGroup(actionID);
-
-            RecastDetail* cooldownPtr = actionManager->GetRecastGroupDetail(cooldownGroup - 1);
-            if (cooldownPtr is null)
+            CooldownData data = new()
             {
-                CooldownData data = new()
-                {
-                    CooldownTotal = -1
-                };
+                ActionID = actionID,
+            };
 
-                return cooldownCache[actionID] = data;
-            }
-
-            cooldownPtr->ActionId = actionID;
-
-            return cooldownCache[actionID] = *(CooldownData*)cooldownPtr;
+            return cooldownCache[actionID] = data;  
         }
 
         /// <summary> Get the maximum number of charges for an action. </summary>
         /// <param name="actionID"> Action ID to check. </param>
-        /// <returns> Max number of charges at current and max level. </returns>
-        internal unsafe (ushort Current, ushort Max) GetMaxCharges(uint actionID)
-        {
-            IPlayerCharacter? player = Service.ClientState.LocalPlayer;
-            if (player == null)
-                return (0, 0);
-
-            uint job = player.ClassJob.Id;
-            byte level = player.Level;
-            if (job == 0 || level == 0)
-                return (0, 0);
-
-            var key = (actionID, job, level);
-            if (chargesCache.TryGetValue(key, out var found))
-                return found;
-
-            ushort cur = ActionManager.GetMaxCharges(actionID, 0);
-            ushort max = ActionManager.GetMaxCharges(actionID, 90);
-            return chargesCache[key] = (cur, max);
-        }
+        /// <returns> Max number of charges at current level. </returns>
+        internal unsafe ushort GetMaxCharges(uint actionID) => GetCooldown(actionID).MaxCharges;
 
         /// <summary> Get the resource cost of an action. </summary>
         /// <param name="actionID"> Action ID to check. </param>

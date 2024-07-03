@@ -439,7 +439,7 @@ namespace XIVSlothCombo.Combos.PvE
                         return Rhizomata;
 
                     if (IsEnabled(CustomComboPreset.SGE_ST_Heal_Kardia) && LevelChecked(Kardia) &&
-                        FindEffectAny(Buffs.Kardia) is null &&
+                        FindEffect(Buffs.Kardia) is null &&
                         FindEffect(Buffs.Kardion, healTarget, LocalPlayer?.GameObjectId) is null)
                         return Kardia;
 
