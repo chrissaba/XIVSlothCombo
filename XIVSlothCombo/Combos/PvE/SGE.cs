@@ -285,7 +285,7 @@ namespace XIVSlothCombo.Combos.PvE
                 {
                     // Kardia Reminder
                     if (IsEnabled(CustomComboPreset.SGE_ST_DPS_Kardia) && LevelChecked(Kardia) &&
-                        FindEffect(Buffs.Kardia) is null)
+                        FindEffectAny(Buffs.Kardia) is null)
                         return Kardia;
 
                     // Lucid Dreaming
@@ -426,7 +426,7 @@ namespace XIVSlothCombo.Combos.PvE
                     if (HasEffect(Buffs.Eukrasia))
                         return EukrasianDiagnosis;
 
-                    GameObject? healTarget = GetHealTarget(Config.SGE_ST_Heal_Adv && Config.SGE_ST_Heal_UIMouseOver);
+                    IGameObject? healTarget = GetHealTarget(Config.SGE_ST_Heal_Adv && Config.SGE_ST_Heal_UIMouseOver);
 
                     if (IsEnabled(CustomComboPreset.SGE_ST_Heal_Esuna) && ActionReady(All.Esuna) &&
                         GetTargetHPPercent(healTarget) >= Config.SGE_ST_Heal_Esuna &&
@@ -439,8 +439,8 @@ namespace XIVSlothCombo.Combos.PvE
                         return Rhizomata;
 
                     if (IsEnabled(CustomComboPreset.SGE_ST_Heal_Kardia) && LevelChecked(Kardia) &&
-                        FindEffect(Buffs.Kardia) is null &&
-                        FindEffect(Buffs.Kardion, healTarget, LocalPlayer?.ObjectId) is null)
+                        FindEffectAny(Buffs.Kardia) is null &&
+                        FindEffect(Buffs.Kardion, healTarget, LocalPlayer?.GameObjectId) is null)
                         return Kardia;
 
                     foreach (var prio in Config.SGE_ST_Heals_Priority.Items.OrderBy(x => x))
@@ -501,7 +501,7 @@ namespace XIVSlothCombo.Combos.PvE
 
                     if (IsEnabled(CustomComboPreset.SGE_AoE_Heal_EPrognosis) && LevelChecked(Eukrasia) &&
                         (IsEnabled(CustomComboPreset.SGE_AoE_Heal_EPrognosis_IgnoreShield) ||
-                         FindEffect(Buffs.EukrasianPrognosis) is null))
+                         FindEffectAny(Buffs.EukrasianPrognosis) is null))
                         return Eukrasia;
                 }
 

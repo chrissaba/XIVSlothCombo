@@ -58,7 +58,7 @@ namespace XIVSlothCombo.Data
 
 
            
-            return limitBreakValueCache = ((ushort)(((ushort)(uiState->LimitBreakController.CurrentValue))/((ushort)uiState->LimitBreakController.BarValue)*100));
+            return limitBreakValueCache = (ushort)(((ushort)uiState->LimitBreakController.CurrentUnits)/((ushort)uiState->LimitBreakController.BarUnits)*100);
         }
 
 
@@ -67,16 +67,16 @@ namespace XIVSlothCombo.Data
         /// <param name="obj"> Object to look for effects on. </param>
         /// <param name="sourceID"> Source object ID. </param>
         /// <returns> Status object or null. </returns>
-        internal DalamudStatus.Status? GetStatus(uint statusID, GameObject? obj, uint? sourceID)
+        internal DalamudStatus.Status? GetStatus(uint statusID, IGameObject? obj, uint? sourceID)
         {
-            var key = (statusID, obj?.ObjectId, sourceID);
-            if (statusCache.TryGetValue(key, out DalamudStatus.Status? found))
+            var key = (statusID, obj?.GameObjectId, sourceID);
+            if (statusCache.TryGetValue(((uint StatusID, uint? TargetID, uint? SourceID))key, out DalamudStatus.Status? found))
                 return found;
 
             if (obj is null)
                 return statusCache[key] = null;
 
-            if (obj is not BattleChara chara)
+            if (obj is not IBattleChara chara)
                 return statusCache[key] = null;
 
             foreach (DalamudStatus.Status? status in chara.StatusList)
@@ -113,7 +113,7 @@ namespace XIVSlothCombo.Data
                 return cooldownCache[actionID] = data;
             }
 
-            cooldownPtr->ActionID = actionID;
+            cooldownPtr->ActionId = actionID;
 
             return cooldownCache[actionID] = *(CooldownData*)cooldownPtr;
         }
@@ -123,7 +123,7 @@ namespace XIVSlothCombo.Data
         /// <returns> Max number of charges at current and max level. </returns>
         internal unsafe (ushort Current, ushort Max) GetMaxCharges(uint actionID)
         {
-            PlayerCharacter? player = Service.ClientState.LocalPlayer;
+            IPlayerCharacter? player = Service.ClientState.LocalPlayer;
             if (player == null)
                 return (0, 0);
 

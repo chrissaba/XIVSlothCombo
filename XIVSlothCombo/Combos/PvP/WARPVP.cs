@@ -44,11 +44,12 @@ namespace XIVSlothCombo.Combos.PvP
                     if (!GetCooldown(Bloodwhetting).IsCooldown && (IsEnabled(CustomComboPreset.WARPvP_BurstMode_Bloodwhetting) || canWeave))
                         return OriginalHook(Bloodwhetting);
 
+                    if (IsEnabled(CustomComboPreset.WARPvP_BurstMode_PrimalRend) && IsOffCooldown(PrimalRend))
+                        return OriginalHook(PrimalRend);
+
                     if (!InMeleeRange() && IsOffCooldown(Blota) && !TargetHasEffectAny(PvPCommon.Debuffs.Stun) && IsEnabled(CustomComboPreset.WARPvP_BurstMode_Blota) && Config.WARPVP_BlotaTiming == 0 && IsOffCooldown(PrimalRend))
                         return OriginalHook(Blota);
 
-                    if (IsEnabled(CustomComboPreset.WARPvP_BurstMode_PrimalRend) && IsOffCooldown(PrimalRend))
-                        return OriginalHook(PrimalRend);
 
                     if (!InMeleeRange() && IsOffCooldown(Blota) && !TargetHasEffectAny(PvPCommon.Debuffs.Stun) && IsEnabled(CustomComboPreset.WARPvP_BurstMode_Blota) && Config.WARPVP_BlotaTiming == 1 && IsOnCooldown(PrimalRend))
                         return OriginalHook(Blota);

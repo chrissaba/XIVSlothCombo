@@ -82,9 +82,9 @@ namespace XIVSlothCombo.Combos.PvP
 
                     if (HasEffect(Buffs.Hidden))
                         return OriginalHook(Assassinate);
-                    if (CustomComboFunctions.GetLimitBreakValue() == 100 && targethp < 50 && targethp > 0)
+                    if (CustomComboFunctions.GetLimitBreakValue() == 100 && targethp < 50 && targethp > 0 && EnemyHealthMaxHp()<70000)
                         return OriginalHook(SeitonTenchu);
-                    if (HasEffect(Buffs.UnsealedSeitonTenchu) && targethp < 50 && targethp > 0)
+                    if (HasEffect(Buffs.UnsealedSeitonTenchu) && targethp < 50 && targethp > 0 && EnemyHealthMaxHp() < 70000)
                         return OriginalHook(SeitonTenchu);
                     if (canWeave)
                     {
@@ -105,11 +105,11 @@ namespace XIVSlothCombo.Combos.PvP
                         if (IsEnabled(CustomComboPreset.NINPvP_ST_Meisui) && inMeisuiRange && !hutonLocked)
                             return OriginalHook(Huton);
 
-                        if (!raijuLocked && !TargetHasEffectAny(PvPCommon.Buffs.Guard))
-                            return OriginalHook(ForkedRaiju);
-
                         if (!hyoshoLocked)
                             return OriginalHook(HyoshoRanryu);
+
+                        if (!raijuLocked && !TargetHasEffectAny(PvPCommon.Buffs.Guard))
+                            return OriginalHook(ForkedRaiju);
 
                         if (!hutonLocked)
                             return OriginalHook(Huton);
@@ -132,7 +132,7 @@ namespace XIVSlothCombo.Combos.PvP
             {
 
 
-                if (actionID == FumaShuriken)
+                if (actionID == Mug)
                 {
                     var threeMudrasCD = GetCooldown(ThreeMudra);
                     var fumaCD = GetCooldown(FumaShuriken);
@@ -167,11 +167,11 @@ namespace XIVSlothCombo.Combos.PvP
                         if (IsEnabled(CustomComboPreset.NINPvP_AoE_Meisui) && inMeisuiRange && !meisuiLocked)
                             return OriginalHook(Meisui);
 
-                        if (!dotonLocked)
-                            return OriginalHook(Doton);
-
                         if (!gokaLocked)
                             return OriginalHook(GokaMekkyaku);
+
+                        if (!dotonLocked)
+                            return OriginalHook(Doton);
                     }
 
                     if (fumaCD.RemainingCharges > 0)

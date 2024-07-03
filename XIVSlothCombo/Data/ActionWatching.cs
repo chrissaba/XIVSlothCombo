@@ -46,7 +46,7 @@ namespace XIVSlothCombo.Data
             if (ActionType is 13 or 2) return;
             if (header.ActionId != 7 &&
                 header.ActionId != 8 &&
-                sourceObjectId == Service.ClientState.LocalPlayer.ObjectId)
+                sourceObjectId == (long)Service.ClientState.LocalPlayer.GameObjectId)
             {
                 TimeLastActionUsed = DateTime.Now;
                 LastActionUseCount++;
@@ -112,19 +112,19 @@ namespace XIVSlothCombo.Data
                 switch (targetOptions)
                 {
                     case 0:
-                        targetObjectId = Combos.JobHelpers.AST.AST_QuickTargetCards.SelectedRandomMember.ObjectId;
+                        targetObjectId = (long)Combos.JobHelpers.AST.AST_QuickTargetCards.SelectedRandomMember.GameObjectId;
                         break;
                     case 1:
                         if (CustomComboFunctions.HasFriendlyTarget())
-                            targetObjectId = Service.ClientState.LocalPlayer.TargetObject.ObjectId;
+                            targetObjectId = (long)Service.ClientState.LocalPlayer.TargetObject.GameObjectId;
                         else
-                            targetObjectId = Combos.JobHelpers.AST.AST_QuickTargetCards.SelectedRandomMember.ObjectId;
+                            targetObjectId = (long)Combos.JobHelpers.AST.AST_QuickTargetCards.SelectedRandomMember.GameObjectId;
                         break;
                     case 2:
                         if (CustomComboFunctions.GetHealTarget(true, true) is not null)
-                            targetObjectId = CustomComboFunctions.GetHealTarget(true, true).ObjectId;
+                            targetObjectId = (long)CustomComboFunctions.GetHealTarget(true, true).GameObjectId;
                         else
-                            targetObjectId = Combos.JobHelpers.AST.AST_QuickTargetCards.SelectedRandomMember.ObjectId;
+                            targetObjectId = (long)Combos.JobHelpers.AST.AST_QuickTargetCards.SelectedRandomMember.GameObjectId;
                         break;
                 }
             }

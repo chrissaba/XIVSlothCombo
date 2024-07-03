@@ -6,7 +6,7 @@ namespace XIVSlothCombo.Services
 {
     public static unsafe class PartyTargetingService
     {
-        private static readonly IntPtr pronounModule = (IntPtr)Framework.Instance()->GetUiModule()->GetPronounModule();
+        private static readonly IntPtr pronounModule = (IntPtr)Framework.Instance()->GetUIModule()->GetPronounModule();
         public static GameObject* UITarget => (GameObject*)*(IntPtr*)(pronounModule + 0x290);
 
         public static long GetObjectID(GameObject* o)
