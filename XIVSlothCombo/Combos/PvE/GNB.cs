@@ -38,7 +38,10 @@ namespace XIVSlothCombo.Combos.PvE
             Bloodfest = 16164,
             Hypervelocity = 25759,
             RoughDivide = 16154,
-            LightningShot = 16143;
+            LightningShot = 16143,
+            ReignOfBeasts = 36937,
+            NobleBlood = 36938,
+            LionHeart = 36939;
 
         public static class Buffs
         {
@@ -48,7 +51,10 @@ namespace XIVSlothCombo.Combos.PvE
                 ReadyToRip = 1842,
                 ReadyToTear = 1843,
                 ReadyToGouge = 1844,
-                ReadyToBlast = 2686;
+                ReadyToBlast = 2686,
+                ReadyToReign = 3840,
+                ReadyToBreak = 3886,
+                ReadyToRaze = 3839;
         }
 
         public static class Debuffs
@@ -132,7 +138,6 @@ namespace XIVSlothCombo.Combos.PvE
                                     return Bloodfest;
                             }
 
-
                             if (IsEnabled(CustomComboPreset.GNB_ST_BlastingZone) && ActionReady(DangerZone))
                             {
                                 //Blasting Zone outside of NM
@@ -172,15 +177,13 @@ namespace XIVSlothCombo.Combos.PvE
                                 }
                             }
                         }
-
-                        //Rough Divide Feature
-                        if (CanWeave(actionID) && LevelChecked(RoughDivide) && IsEnabled(CustomComboPreset.GNB_ST_RoughDivide) && GetRemainingCharges(RoughDivide) > roughDivideChargesRemaining && !IsMoving && !HasEffect(Buffs.ReadyToBlast))
-                        {
-                            if (IsNotEnabled(CustomComboPreset.GNB_ST_MeleeRoughDivide) ||
-                                (IsEnabled(CustomComboPreset.GNB_ST_MeleeRoughDivide) && GetTargetDistance() <= 1 && HasEffect(Buffs.NoMercy) && IsOnCooldown(OriginalHook(DangerZone)) && IsOnCooldown(BowShock)))
-                                return RoughDivide;
-                        }
                     }
+                    if (HasEffect(Buffs.ReadyToReign) && !HasEffect(Buffs.ReadyToBreak) && !(OriginalHook(GnashingFang) == SavageClaw || OriginalHook(GnashingFang) == WickedTalon) && IsOnCooldown(DoubleDown) && IsOnCooldown(GnashingFang) && LevelChecked(ReignOfBeasts) || OriginalHook(ReignOfBeasts) == NobleBlood || OriginalHook(ReignOfBeasts) == LionHeart)
+                    {
+                        return OriginalHook(ReignOfBeasts);
+                    }
+
+                    
 
                     if (IsEnabled(CustomComboPreset.GNB_ST_Gnashing) && LevelChecked(Continuation) &&
                         (HasEffect(Buffs.ReadyToRip) || HasEffect(Buffs.ReadyToTear) || HasEffect(Buffs.ReadyToGouge)))
@@ -195,13 +198,13 @@ namespace XIVSlothCombo.Combos.PvE
                             {
                                 if (IsEnabled(CustomComboPreset.GNB_ST_DoubleDown) && IsOffCooldown(DoubleDown) && gauge.Ammo >= 2 && !HasEffect(Buffs.ReadyToRip) && gauge.AmmoComboStep >= 1)
                                     return DoubleDown;
-                                if (IsEnabled(CustomComboPreset.GNB_ST_SonicBreak) && IsOffCooldown(SonicBreak) && IsOnCooldown(DoubleDown))
+                                if (IsEnabled(CustomComboPreset.GNB_ST_SonicBreak) && IsOffCooldown(SonicBreak) && HasEffect(Buffs.ReadyToBreak) && IsOnCooldown(DoubleDown))
                                     return SonicBreak;
                             }
 
                             if (slowSkS)
                             {
-                                if (IsEnabled(CustomComboPreset.GNB_ST_SonicBreak) && IsOffCooldown(SonicBreak) && !HasEffect(Buffs.ReadyToRip) && gauge.AmmoComboStep >= 1)
+                                if (IsEnabled(CustomComboPreset.GNB_ST_SonicBreak) && IsOffCooldown(SonicBreak) && HasEffect(Buffs.ReadyToBreak) && !HasEffect(Buffs.ReadyToRip) && gauge.AmmoComboStep >= 1)
                                     return SonicBreak;
                                 if (IsEnabled(CustomComboPreset.GNB_ST_DoubleDown) && IsOffCooldown(DoubleDown) && gauge.Ammo >= 2 && IsOnCooldown(SonicBreak))
                                     return DoubleDown;
@@ -210,7 +213,7 @@ namespace XIVSlothCombo.Combos.PvE
 
                         if (!LevelChecked(DoubleDown))
                         {
-                            if (IsEnabled(CustomComboPreset.GNB_ST_SonicBreak) && ActionReady(SonicBreak) && !HasEffect(Buffs.ReadyToRip) && IsOnCooldown(GnashingFang))
+                            if (IsEnabled(CustomComboPreset.GNB_ST_SonicBreak) && ActionReady(SonicBreak) && HasEffect(Buffs.ReadyToBreak) && !HasEffect(Buffs.ReadyToRip) && IsOnCooldown(GnashingFang))
                                 return SonicBreak;
                             //sub level 54 functionality
                             if (IsEnabled(CustomComboPreset.GNB_ST_BlastingZone) && ActionReady(DangerZone) && !LevelChecked(SonicBreak))
@@ -262,7 +265,6 @@ namespace XIVSlothCombo.Combos.PvE
                             return SolidBarrel;
                         }
                     }
-
                     return KeenEdge;
                 }
 
@@ -345,22 +347,23 @@ namespace XIVSlothCombo.Combos.PvE
                             {
                                 if (IsEnabled(CustomComboPreset.GNB_GF_DoubleDown) && IsOffCooldown(DoubleDown) && gauge.Ammo >= 2 && !HasEffect(Buffs.ReadyToRip) && gauge.AmmoComboStep >= 1)
                                     return DoubleDown;
-                                if (IsEnabled(CustomComboPreset.GNB_GF_Cooldowns) && IsOffCooldown(SonicBreak) && IsOnCooldown(DoubleDown))
+                                if (IsEnabled(CustomComboPreset.GNB_GF_Cooldowns) && IsOffCooldown(SonicBreak) && HasEffect(Buffs.ReadyToBreak) && IsOnCooldown(DoubleDown))
                                     return SonicBreak;
                             }
 
                             if (slowSkS)
                             {
-                                if (IsEnabled(CustomComboPreset.GNB_GF_Cooldowns) && IsOffCooldown(SonicBreak) && !HasEffect(Buffs.ReadyToRip) && gauge.AmmoComboStep >= 1)
+                                if (IsEnabled(CustomComboPreset.GNB_GF_Cooldowns) && IsOffCooldown(SonicBreak) && HasEffect(Buffs.ReadyToBreak) && !HasEffect(Buffs.ReadyToRip) && gauge.AmmoComboStep >= 1)
                                     return SonicBreak;
                                 if (IsEnabled(CustomComboPreset.GNB_GF_DoubleDown) && IsOffCooldown(DoubleDown) && gauge.Ammo >= 2 && IsOnCooldown(SonicBreak))
                                     return DoubleDown;
+
                             }
                         }
 
                         if (!LevelChecked(DoubleDown) && IsEnabled(CustomComboPreset.GNB_GF_Cooldowns))
                         {
-                            if (ActionReady(SonicBreak) && !HasEffect(Buffs.ReadyToRip) && IsOnCooldown(GnashingFang))
+                            if (ActionReady(SonicBreak) && !HasEffect(Buffs.ReadyToRip) && HasEffect(Buffs.ReadyToBreak) && IsOnCooldown(GnashingFang))
                                 return SonicBreak;
 
                             //sub level 54 functionality
@@ -450,9 +453,15 @@ namespace XIVSlothCombo.Combos.PvE
                                 return OriginalHook(DangerZone);
                             if (IsEnabled(CustomComboPreset.GNB_AoE_Bloodfest) && gauge.Ammo == 0 && ActionReady(Bloodfest))
                                 return Bloodfest;
+                            if (HasEffect(Buffs.ReadyToRaze))
+                                return Continuation;
+                        }
+                        if (HasEffect(Buffs.ReadyToReign) && !HasEffect(Buffs.ReadyToBreak) && !(OriginalHook(GnashingFang) == SavageClaw || OriginalHook(GnashingFang) == WickedTalon) && IsOnCooldown(DoubleDown) && LevelChecked(ReignOfBeasts) || OriginalHook(ReignOfBeasts) == NobleBlood || OriginalHook(ReignOfBeasts) == LionHeart)
+                        {
+                            return OriginalHook(ReignOfBeasts);
                         }
 
-                        if (IsEnabled(CustomComboPreset.GNB_AOE_SonicBreak) && ActionReady(SonicBreak))
+                        if (IsEnabled(CustomComboPreset.GNB_AOE_SonicBreak) && HasEffect(Buffs.ReadyToBreak) && ActionReady(SonicBreak))
                             return SonicBreak;
                         if (IsEnabled(CustomComboPreset.GNB_AoE_DoubleDown) && gauge.Ammo >= 2 && ActionReady(DoubleDown))
                             return DoubleDown;
@@ -488,7 +497,7 @@ namespace XIVSlothCombo.Combos.PvE
                             return DoubleDown;
                         if (IsEnabled(CustomComboPreset.GNB_NoMercy_Cooldowns_SonicBreakBowShock))
                         {
-                            if (IsOffCooldown(SonicBreak))
+                            if (IsOffCooldown(SonicBreak) && HasEffect(Buffs.ReadyToBreak))
                                 return SonicBreak;
                             if (IsOffCooldown(BowShock))
                                 return BowShock;
