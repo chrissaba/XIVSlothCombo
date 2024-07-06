@@ -4,12 +4,9 @@ using System.Numerics;
 using Dalamud.Game.ClientState.Objects;
 using Dalamud.Game.ClientState.Objects.Enums;
 using Dalamud.Game.ClientState.Objects.Types;
-<<<<<<< HEAD
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
-=======
 using ECommons.DalamudServices;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
->>>>>>> 7da115b0bc5c06adf1bbb713ed00075d8afa391c
 using XIVSlothCombo.Data;
 using XIVSlothCombo.Services;
 using StructsObject = FFXIVClientStructs.FFXIV.Client.Game.Object;
