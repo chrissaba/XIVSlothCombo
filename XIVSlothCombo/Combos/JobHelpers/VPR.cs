@@ -25,7 +25,7 @@ namespace XIVSlothCombo.Combos.JobHelpers
 
         public uint OpenerStep = 0;
 
-        private static readonly uint[] StandardOpener = [
+        private static readonly uint[] StandardOpenerFlankFirst = [
             SerpentsIre,
             SwiftskinsSting,
             Dreadwinder,
@@ -63,6 +63,45 @@ namespace XIVSlothCombo.Combos.JobHelpers
             SwiftskinsCoil,
             TwinbloodBite,
             TwinfangBite];
+
+        private static readonly uint[] StandardOpenerRearFirst = [
+           SerpentsIre,
+            SwiftskinsSting,
+            Dreadwinder,
+            SwiftskinsCoil,
+            TwinbloodBite,
+            TwinfangBite,
+            HuntersCoil,
+            TwinfangBite,
+            TwinbloodBite,
+            Reawaken,
+            FirstGeneration,
+            FirstLegacy,
+            SecondGeneration,
+            SecondLegacy,
+            ThirdGeneration,
+            ThirdLegacy,
+            FourthGeneration,
+            FourthLegacy,
+            Ouroboros,
+            UncoiledFury,
+            UncoiledTwinfang,
+            UncoiledTwinblood,
+            UncoiledFury,
+            UncoiledTwinfang,
+            UncoiledTwinblood,
+            HindstingStrike,
+            DeathRattle,
+            Dreadwinder,
+            UncoiledFury,
+            UncoiledTwinfang,
+            UncoiledTwinblood,
+            SwiftskinsCoil,
+            TwinbloodBite,
+            TwinfangBite,
+            HuntersCoil,
+            TwinfangBite,
+            TwinbloodBite];
 
         public static bool LevelChecked => CustomComboFunctions.LocalPlayer.Level >= OpenerLevel;
 
@@ -144,8 +183,8 @@ namespace XIVSlothCombo.Combos.JobHelpers
                 if (CustomComboFunctions.InCombat() && ActionWatching.TimeSinceLastAction.TotalSeconds >= 5)
                     CurrentState = OpenerState.FailedOpener;
 
-                if (((actionID == Dreadwinder && CustomComboFunctions.GetRemainingCharges(Dreadwinder) < 2) ||
-                        (actionID == SerpentsIre && CustomComboFunctions.IsOnCooldown(SerpentsIre))) && ActionWatching.TimeSinceLastAction.TotalSeconds >= 3)
+                if (((actionID == SerpentsIre && CustomComboFunctions.IsOnCooldown(SerpentsIre)) ||
+                    (actionID == Dreadwinder && CustomComboFunctions.GetRemainingCharges(Dreadwinder) < 2)) && ActionWatching.TimeSinceLastAction.TotalSeconds >= 3)
                 {
                     CurrentState = OpenerState.FailedOpener;
                     return false;
@@ -173,14 +212,22 @@ namespace XIVSlothCombo.Combos.JobHelpers
             {
                 if (simpleMode)
                 {
-                    if (DoOpener(StandardOpener, ref actionID))
+                    if (DoOpener(StandardOpenerRearFirst, ref actionID))
                         return true;
                 }
                 else
                 {
-                    if (DoOpener(StandardOpener, ref actionID))
-                        return true;
+                    if (Config.VPR_Positional == 0)
+                    {
+                        if (DoOpener(StandardOpenerRearFirst, ref actionID))
+                            return true;
+                    }
 
+                    if (Config.VPR_Positional == 1)
+                    {
+                        if (DoOpener(StandardOpenerFlankFirst, ref actionID))
+                            return true;
+                    }
                 }
             }
 
@@ -195,6 +242,6 @@ namespace XIVSlothCombo.Combos.JobHelpers
     }
     internal static class VPRHelpers
     {
-        public static bool HasRattlingCoilStack(this TmpVPRGauge gauge) => gauge.RattlingCoilStacks > 1;
+        public static bool HasRattlingCoilStack(this VPRGauge gauge) => gauge.RattlingCoilStacks > 0;
     }
 }
