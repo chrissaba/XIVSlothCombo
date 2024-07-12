@@ -78,28 +78,6 @@ namespace XIVSlothCombo
             //AST.JobID,
             //BLM.JobID,
             //BLU.JobID,
-<<<<<<<<< Temporary merge branch 1
-            BRD.JobID,
-            DNC.JobID,
-            DOL.JobID,
-            DRG.JobID,
-            DRK.JobID,
-            GNB.JobID,
-            MCH.JobID,
-            MNK.JobID,
-            NIN.JobID,
-            PCT.JobID,
-            PLD.JobID,
-            RDM.JobID,
-            RPR.JobID,
-            SAM.JobID,
-            SCH.JobID,
-            SGE.JobID,
-            SMN.JobID,
-            VPR.JobID,
-            WAR.JobID,
-            WHM.JobID
-=========
             //BRD.JobID,
             //DNC.JobID,
             //DOL.JobID,
@@ -118,7 +96,7 @@ namespace XIVSlothCombo
             //SMN.JobID,
             //WAR.JobID,
             //WHM.JobID
->>>>>>>>> Temporary merge branch 2
+
         };
 
         public static uint? JobID
