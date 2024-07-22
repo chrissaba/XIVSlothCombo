@@ -45,12 +45,13 @@ namespace XIVSlothCombo.Combos.PvE
             TsubameGaeshi = 16483,
             KaeshiHiganbana = 16484,
             Shoha = 16487,
-            Shoha2 = 25779,
             Ikishoten = 16482,
             Fuko = 25780,
             OgiNamikiri = 25781,
             KaeshiNamikiri = 25782,
             Yaten = 7493,
+            Zanshin = 36964,
+            Gyofu = 36963,
             Gyoten = 7492;
 
         public static class Buffs
@@ -61,6 +62,8 @@ namespace XIVSlothCombo.Combos.PvE
                 EyesOpen = 1252,
                 OgiNamikiriReady = 2959,
                 Fuka = 1299,
+                ZanshinReady = 3855,
+                Tendo = 3856,
                 Fugetsu = 1298;
         }
 
@@ -114,7 +117,7 @@ namespace XIVSlothCombo.Combos.PvE
                         if (lastComboMove == Hakaze && Yukikaze.LevelChecked())
                             return Yukikaze;
                     }
-
+                    
                     return Hakaze;
                 }
 
@@ -254,12 +257,17 @@ namespace XIVSlothCombo.Combos.PvE
                             if (gauge.Kaeshi == Kaeshi.SETSUGEKKA || gauge.Kaeshi == Kaeshi.GOKEN)
                                 return OriginalHook(TsubameGaeshi);
 
+
                             //1-2-3 Logic
-                            if (lastComboMove == Hakaze)
+                            if (lastComboMove == Hakaze || lastComboMove == Gyofu)
                                 return Yukikaze;
 
                             if (twoSeal && gauge.MeditationStacks == 0 && TargetHasEffect(Debuffs.Higanbana))
+                            {
+                                if (LevelChecked(Gyofu))
+                                    return Gyofu;
                                 return Hakaze;
+                            }
 
                             if (meikyostacks == 3)
                                 return Gekko;
@@ -279,7 +287,7 @@ namespace XIVSlothCombo.Combos.PvE
                             if (GetRemainingCharges(TsubameGaeshi) == 0)
                                 inOpener = false;
 
-                            if ((lastComboMove == Yukikaze && oneSeal) || (lastComboMove is Hakaze && (threeSeal || gauge.Sen is Sen.SETSU)) || CombatEngageDuration().TotalSeconds > 40)
+                            if ((lastComboMove == Yukikaze && oneSeal) || ((lastComboMove is Hakaze || lastComboMove is Gyofu) && (threeSeal || gauge.Sen is Sen.SETSU)) || CombatEngageDuration().TotalSeconds > 40)
                             {
                                 inOpener = false;
                                 nonOpener = true;
@@ -355,11 +363,15 @@ namespace XIVSlothCombo.Combos.PvE
                                         if (gauge.Sen == Sen.SETSU)
                                             return Hagakure;
 
-                                        if (lastComboMove == Hakaze)
+                                        if (lastComboMove == Hakaze || lastComboMove == Gyofu)
                                             return Yukikaze;
 
                                         if (gauge.Sen == 0)
+                                        {
+                                            if (LevelChecked(Gyofu))
+                                                return Gyofu;
                                             return Hakaze;
+                                        }
                                     }
                                 }
 
@@ -386,11 +398,15 @@ namespace XIVSlothCombo.Combos.PvE
                                         if (gauge.Sen == Sen.SETSU)
                                             return Hagakure;
 
-                                        if (lastComboMove == Hakaze)
+                                        if (lastComboMove == Hakaze || lastComboMove == Gyofu)
                                             return Yukikaze;
 
                                         if (gauge.Sen == 0)
+                                        {
+                                            if (LevelChecked(Gyofu))
+                                                return Gyofu;
                                             return Hakaze;
+                                        }
                                     }
 
                                     if (SamFillerCombo == 2)
@@ -407,18 +423,22 @@ namespace XIVSlothCombo.Combos.PvE
                                         if (lastComboMove == Jinpu)
                                             return Gekko;
 
-                                        if (lastComboMove == Hakaze)
+                                        if (lastComboMove == Hakaze || lastComboMove == Gyofu)
                                             return Jinpu;
 
                                         if (gauge.Sen == 0)
+                                        {
+                                            if (LevelChecked(Gyofu))
+                                                return Gyofu;
                                             return Hakaze;
+                                        }
                                     }
 
                                     if (SamFillerCombo == 3)
                                     {
                                         if (WasLastAbility(Hagakure))
                                             fillerComplete = true;
-                                        if (WasLastWeaponskill(Hakaze) && gauge.Sen == Sen.SETSU)
+                                        if ((WasLastWeaponskill(Hakaze)||WasLastWeaponskill(Gyofu)) && gauge.Sen == Sen.SETSU)
                                             fastFillerReady = true;
 
                                         if (gauge.Kenki >= 75 && CanWeave(actionID))
@@ -427,11 +447,15 @@ namespace XIVSlothCombo.Combos.PvE
                                         if (gauge.Sen == Sen.SETSU && WasLastWeaponskill(Yukikaze) && fastFillerReady)
                                             return Hagakure;
 
-                                        if (lastComboMove == Hakaze)
+                                        if (lastComboMove == Hakaze||lastComboMove == Gyofu)
                                             return Yukikaze;
 
                                         if (gauge.Sen == 0 || gauge.Sen == Sen.SETSU)
+                                        {
+                                            if (LevelChecked(Gyofu))
+                                                return Gyofu;
                                             return Hakaze;
+                                        }
                                     }
                                 }
                             }
@@ -459,7 +483,7 @@ namespace XIVSlothCombo.Combos.PvE
                                     {
                                         if (CombatEngageDuration().TotalSeconds <= 10 ||
                                             (CombatEngageDuration().TotalSeconds > 10 &&
-                                            ((SamMeikyoChoice is 0 or 1 && !WasLastWeaponskill(Shifu) && !WasLastWeaponskill(Jinpu) && !(lastComboMove is Hakaze && !gauge.Sen.HasFlag(Sen.SETSU) && HasEffect(Buffs.Fugetsu) && HasEffect(Buffs.Fuka))) ||
+                                            ((SamMeikyoChoice is 0 or 1 && !WasLastWeaponskill(Shifu) && !WasLastWeaponskill(Jinpu) && !((lastComboMove is Hakaze||lastComboMove is Gyofu) && !gauge.Sen.HasFlag(Sen.SETSU) && HasEffect(Buffs.Fugetsu) && HasEffect(Buffs.Fuka))) ||
                                             (SamMeikyoChoice is 2 && (comboTime is 0.0f || WasLastWeaponskill(Yukikaze))))))
                                         {
                                             if (IsNotEnabled(CustomComboPreset.SAM_ST_GekkoCombo_CDs_MeikyoShisui_Burst))
@@ -472,7 +496,8 @@ namespace XIVSlothCombo.Combos.PvE
                                                 return MeikyoShisui;
                                         }
                                     }
-
+                                    if (HasEffect(Buffs.ZanshinReady))
+                                        return OriginalHook(Zanshin);
                                     //Senei Features
                                     if (IsEnabled(CustomComboPreset.SAM_ST_GekkoCombo_CDs_Senei) && gauge.Kenki >= 25 && IsOffCooldown(Senei))
                                     {
@@ -543,6 +568,7 @@ namespace XIVSlothCombo.Combos.PvE
                                         }
                                     }
                                 }
+
                             }
                             // healing - please move if not appropriate this high priority
                             if (IsEnabled(CustomComboPreset.SAM_ST_ComboHeals) && CanSpellWeave(actionID))
@@ -571,7 +597,7 @@ namespace XIVSlothCombo.Combos.PvE
 
                         if (comboTime > 0)
                         {
-                            if (lastComboMove == Hakaze && Jinpu.LevelChecked())
+                            if ((lastComboMove == Hakaze || lastComboMove == Gyofu) && Jinpu.LevelChecked())
                             {
                                 if (IsEnabled(CustomComboPreset.SAM_ST_GekkoCombo_Yukikaze) && !gauge.Sen.HasFlag(Sen.SETSU) && Yukikaze.LevelChecked() && HasEffect(Buffs.Fugetsu) && HasEffect(Buffs.Fuka))
                                     return Yukikaze;
@@ -595,7 +621,11 @@ namespace XIVSlothCombo.Combos.PvE
                     }
 
 
+                    
+                    if (LevelChecked(Gyofu))
+                        return Gyofu;
                     return Hakaze;
+                    
                 }
 
                 return actionID;
@@ -626,14 +656,18 @@ namespace XIVSlothCombo.Combos.PvE
 
                     if (comboTime > 0)
                     {
-                        if (lastComboMove == Hakaze && Shifu.LevelChecked())
+                        if ((lastComboMove == Hakaze || lastComboMove == Gyofu) && Shifu.LevelChecked())
                             return Shifu;
 
                         if (lastComboMove == Shifu && Kasha.LevelChecked())
                             return Kasha;
                     }
 
+                    
+                    if (LevelChecked(Gyofu))
+                        return Gyofu;
                     return Hakaze;
+                    
                 }
 
                 return actionID;
@@ -682,8 +716,8 @@ namespace XIVSlothCombo.Combos.PvE
                         if (IsEnabled(CustomComboPreset.SAM_AoE_Overcap) && gauge.Kenki >= SamAOEKenkiOvercapAmount && LevelChecked(Kyuten))
                             return Kyuten;
 
-                        if (IsEnabled(CustomComboPreset.SAM_AoE_MangetsuCombo_Shoha2) && LevelChecked(Shoha2) && gauge.MeditationStacks == 3)
-                            return Shoha2;
+                        if (IsEnabled(CustomComboPreset.SAM_AoE_MangetsuCombo_Shoha2) && LevelChecked(Shoha) && gauge.MeditationStacks == 3)
+                            return Shoha;
 
                         if (IsEnabled(CustomComboPreset.SAM_AoE_MangetsuCombo_MeikyoShisui) && LevelChecked(MeikyoShisui) && !HasEffect(Buffs.MeikyoShisui) && GetRemainingCharges(MeikyoShisui) > 0)
                             return MeikyoShisui;
@@ -741,11 +775,15 @@ namespace XIVSlothCombo.Combos.PvE
                         if (lastComboMove == Shifu && Kasha.LevelChecked())
                             return Kasha;
 
-                        if (lastComboMove == Hakaze && Shifu.LevelChecked())
+                        if ((lastComboMove == Hakaze || lastComboMove == Gyofu) && Shifu.LevelChecked())
                             return Shifu;
 
                         if (gauge.Sen.HasFlag(Sen.KA) == false || GetBuffRemainingTime(Buffs.Fuka) < GetBuffRemainingTime(Buffs.Fugetsu) || !HasEffect(Buffs.Fuka) && Hakaze.LevelChecked())
+                        {
+                            if (LevelChecked(Gyofu))
+                                return Gyofu;
                             return Hakaze;
+                        }
                     }
 
                     return OriginalHook(Fuko);
@@ -810,7 +848,7 @@ namespace XIVSlothCombo.Combos.PvE
 
                         if (comboTime > 0)
                         {
-                            if (lastComboMove == Hakaze && Yukikaze.LevelChecked())
+                            if ((lastComboMove == Hakaze || lastComboMove == Gyofu) && Yukikaze.LevelChecked())
                                 return Yukikaze;
 
                             if (lastComboMove is Fuko or Fuga && gauge.Sen.HasFlag(Sen.GETSU) == false && Mangetsu.LevelChecked())
@@ -818,7 +856,11 @@ namespace XIVSlothCombo.Combos.PvE
                         }
 
                         if (gauge.Sen.HasFlag(Sen.SETSU) == false)
+                        {
+                            if (LevelChecked(Gyofu))
+                                return Gyofu;
                             return Hakaze;
+                        }
                     }
                     if (comboTime > 0 && Oka.LevelChecked())
                     {
@@ -917,8 +959,8 @@ namespace XIVSlothCombo.Combos.PvE
                     if (IsEnabled(CustomComboPreset.SAM_Kyuten_Shoha2_Guren) && IsOffCooldown(Guren) && Guren.LevelChecked())
                         return Guren;
 
-                    if (IsEnabled(CustomComboPreset.SAM_Kyuten_Shoha2) && gauge.MeditationStacks == 3 && Shoha2.LevelChecked())
-                        return Shoha2;
+                    if (IsEnabled(CustomComboPreset.SAM_Kyuten_Shoha2) && gauge.MeditationStacks == 3 && Shoha.LevelChecked())
+                        return Shoha;
                 }
 
                 return actionID;

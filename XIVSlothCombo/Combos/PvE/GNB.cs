@@ -168,13 +168,18 @@ namespace XIVSlothCombo.Combos.PvE
                         return OriginalHook(Continuation);
 
                     //Reign combo
-                    if (IsEnabled(CustomComboPreset.GNB_ST_Reign) && (LevelChecked(ReignOfBeasts) && (HasEffect(Buffs.NoMercy))))
+                    if (IsEnabled(CustomComboPreset.GNB_ST_Reign) && (LevelChecked(ReignOfBeasts)))
                     {
-                        if (HasEffect(Buffs.ReadyToReign) && GetBuffRemainingTime(Buffs.ReadyToReign) <= 30)
+                        if (HasEffect(Buffs.ReadyToReign) && GetBuffRemainingTime(Buffs.ReadyToReign) <= 30 && (HasEffect(Buffs.NoMercy)))
                         {
                             if (WasLastWeaponskill(WickedTalon) || (WasLastAbility(EyeGouge)))
                                 return OriginalHook(ReignOfBeasts);
+                            if (GetCooldownRemainingTime(DoubleDown) > 8 && GetCooldownChargeRemainingTime(GnashingFang) > 8 && !HasEffect(Buffs.ReadyToBreak) && gauge.AmmoComboStep != 1 && gauge.AmmoComboStep != 2)
+                                return OriginalHook(ReignOfBeasts);
                         }
+                        
+                        if (HasEffect(Buffs.ReadyToReign) && (GetBuffRemainingTime(Buffs.NoMercy) < 7 || GetBuffRemainingTime(Buffs.ReadyToReign) < 5))
+                            return OriginalHook(ReignOfBeasts);
 
                         if (WasLastWeaponskill(ReignOfBeasts) || WasLastWeaponskill(NobleBlood))
                         {
@@ -206,7 +211,7 @@ namespace XIVSlothCombo.Combos.PvE
                     // 60s window features
                     if ((GetCooldownRemainingTime(NoMercy) > 57 || HasEffect(Buffs.NoMercy)) && IsEnabled(CustomComboPreset.GNB_ST_MainCombo_CooldownsGroup))
                     {
-                        if (LevelChecked(DoubleDown))
+                        if (LevelChecked(DoubleDown) && ActionReady(DoubleDown))
                         {
                             // 2min NM
                             if (WasLastWeaponskill(SonicBreak) && gauge.Ammo == 2 && GetCooldownRemainingTime(Bloodfest) < 10 || IsOffCooldown(Bloodfest))
