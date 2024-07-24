@@ -104,7 +104,8 @@ namespace XIVSlothCombo.Combos.PvE
                     {
                         if (IsEnabled(CustomComboPreset.SAM_TrueNorth) && TargetNeedsPositionals() && GetBuffStacks(Buffs.MeikyoShisui) > 0 && !HasEffect(All.Buffs.TrueNorth) && GetRemainingCharges(All.TrueNorth) > 0 && All.TrueNorth.LevelChecked())
                             return All.TrueNorth;
-
+                        if (HasEffect(Buffs.ZanshinReady) && gauge.Kenki >= 50 && CanWeave(actionID))
+                            return Zanshin;
                         if (IsEnabled(CustomComboPreset.SAM_ST_Overcap) && gauge.Kenki >= SamKenkiOvercapAmount && Shinten.LevelChecked())
                             return Shinten;
                     }
@@ -154,7 +155,9 @@ namespace XIVSlothCombo.Combos.PvE
                     var enemyHP = GetTargetHPPercent();
                     bool openerReady = GetRemainingCharges(MeikyoShisui) == 1 && IsOffCooldown(Senei) && IsOffCooldown(Ikishoten) && GetRemainingCharges(TsubameGaeshi) == 2;
 
-                    
+                    if (HasEffect(Buffs.ZanshinReady) && gauge.Kenki >= 50 && CanWeave(actionID))
+                        return Zanshin;
+
                     if (!InCombat())
                     {
                         hasDied = false;
@@ -204,6 +207,9 @@ namespace XIVSlothCombo.Combos.PvE
                             //oGCDs
                             if (CanSpellWeave(actionID))
                             {
+                                if (HasEffect(Buffs.ZanshinReady) && gauge.Kenki >=50)
+                                    return Zanshin;
+
                                 if (gauge.Kaeshi == Kaeshi.NAMIKIRI && gauge.MeditationStacks == 3)
                                     return Shoha;
 
@@ -354,6 +360,9 @@ namespace XIVSlothCombo.Combos.PvE
 
                                     if (SamFillerCombo == 3)
                                     {
+                                        if (HasEffect(Buffs.ZanshinReady) && gauge.Kenki >= 50 && CanWeave(actionID))
+                                            return Zanshin;
+
                                         if (WasLastAbility(Hagakure))
                                             fillerComplete = true;
 
@@ -389,6 +398,9 @@ namespace XIVSlothCombo.Combos.PvE
 
                                     if (SamFillerCombo == 1)
                                     {
+                                        if (HasEffect(Buffs.ZanshinReady) && gauge.Kenki >= 50 && CanWeave(actionID))
+                                            return Zanshin;
+
                                         if (WasLastAbility(Hagakure))
                                             fillerComplete = true;
 
@@ -411,6 +423,9 @@ namespace XIVSlothCombo.Combos.PvE
 
                                     if (SamFillerCombo == 2)
                                     {
+                                        if (HasEffect(Buffs.ZanshinReady) && gauge.Kenki >= 50 && CanWeave(actionID))
+                                            return Zanshin;
+
                                         if (WasLastAbility(Hagakure))
                                             fillerComplete = true;
 
@@ -436,6 +451,9 @@ namespace XIVSlothCombo.Combos.PvE
 
                                     if (SamFillerCombo == 3)
                                     {
+                                        if (HasEffect(Buffs.ZanshinReady) && gauge.Kenki >= 50 && CanWeave(actionID))
+                                            return Zanshin;
+
                                         if (WasLastAbility(Hagakure))
                                             fillerComplete = true;
                                         if ((WasLastWeaponskill(Hakaze)||WasLastWeaponskill(Gyofu)) && gauge.Sen == Sen.SETSU)
@@ -496,8 +514,7 @@ namespace XIVSlothCombo.Combos.PvE
                                                 return MeikyoShisui;
                                         }
                                     }
-                                    if (HasEffect(Buffs.ZanshinReady))
-                                        return OriginalHook(Zanshin);
+
                                     //Senei Features
                                     if (IsEnabled(CustomComboPreset.SAM_ST_GekkoCombo_CDs_Senei) && gauge.Kenki >= 25 && IsOffCooldown(Senei))
                                     {
@@ -643,6 +660,8 @@ namespace XIVSlothCombo.Combos.PvE
 
                 if (actionID == Kasha)
                 {
+                    if (HasEffect(Buffs.ZanshinReady) && gauge.Kenki >= 50 && CanWeave(actionID))
+                        return Zanshin;
                     if (CanWeave(actionID))
                     {
                         if (IsEnabled(CustomComboPreset.SAM_TrueNorth) && TargetNeedsPositionals() && GetBuffStacks(Buffs.MeikyoShisui) > 0 && !HasEffect(All.Buffs.TrueNorth) && GetRemainingCharges(All.TrueNorth) > 0 && All.TrueNorth.LevelChecked())
@@ -682,6 +701,7 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID == Mangetsu)
                 {
+
                     var gauge = GetJobGauge<SAMGauge>();
                     var SamAOEKenkiOvercapAmount = PluginConfiguration.GetCustomIntValue(Config.SAM_AoE_KenkiOvercapAmount);
 
@@ -697,6 +717,8 @@ namespace XIVSlothCombo.Combos.PvE
                     //oGCD Features
                     if (CanSpellWeave(actionID))
                     {
+                        if (HasEffect(Buffs.ZanshinReady) && gauge.Kenki >= 50 && CanWeave(actionID))
+                            return Zanshin;
                         if (IsEnabled(CustomComboPreset.SAM_AoE_MangetsuCombo_Hagakure) && OriginalHook(Iaijutsu) == Setsugekka && LevelChecked(Hagakure))
                             return Hagakure;
                       
@@ -809,7 +831,8 @@ namespace XIVSlothCombo.Combos.PvE
 
                     if (HasEffect(Buffs.MeikyoShisui) && IsNotEnabled(CustomComboPreset.SAM_AoE_OkaCombo_TwoTarget))
                         return Oka;
-
+                    if (HasEffect(Buffs.ZanshinReady) && gauge.Kenki >= 50 && CanWeave(actionID))
+                        return Zanshin;
                     //Two Target Rotation
                     if (IsEnabled(CustomComboPreset.SAM_AoE_OkaCombo_TwoTarget))
                     {

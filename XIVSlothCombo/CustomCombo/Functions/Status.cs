@@ -12,7 +12,7 @@ namespace XIVSlothCombo.CustomComboNS.Functions
         /// <returns> A value indicating if the effect exists. </returns>
         public static bool HasEffect(ushort effectID) => FindEffectAny(effectID) is not null;
 
-        public static float GetBuffStacks(ushort effectId)
+        public static byte GetBuffStacks(ushort effectId)
         {
             Status? eff = FindEffectAny(effectId);
             return eff?.StackCount ?? 0;
