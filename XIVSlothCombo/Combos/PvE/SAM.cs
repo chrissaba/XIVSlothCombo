@@ -104,7 +104,7 @@ namespace XIVSlothCombo.Combos.PvE
                     {
                         if (IsEnabled(CustomComboPreset.SAM_TrueNorth) && TargetNeedsPositionals() && GetBuffStacks(Buffs.MeikyoShisui) > 0 && !HasEffect(All.Buffs.TrueNorth) && GetRemainingCharges(All.TrueNorth) > 0 && All.TrueNorth.LevelChecked())
                             return All.TrueNorth;
-                        if (HasEffect(Buffs.ZanshinReady) && gauge.Kenki >= 50 && CanWeave(actionID))
+                        if (HasEffect(Buffs.ZanshinReady) && CanWeave(actionID))
                             return Zanshin;
                         if (IsEnabled(CustomComboPreset.SAM_ST_Overcap) && gauge.Kenki >= SamKenkiOvercapAmount && Shinten.LevelChecked())
                             return Shinten;
