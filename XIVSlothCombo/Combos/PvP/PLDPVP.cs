@@ -43,11 +43,11 @@ namespace XIVSlothCombo.Combos.PvP
                     if (IsEnabled(CustomComboPreset.PLDPvP_ShieldBash) &&
                         InCombat() && IsOffCooldown(ShieldBash) && CanWeave(actionID) && !TargetHasEffectAny(PvPCommon.Buffs.Guard) && !TargetHasEffectAny(PvPCommon.Buffs.Resilience))
                         return ShieldBash;
-                        
+
                     if (IsEnabled(CustomComboPreset.PLDPvP_Confiteor))
                     {
-                       if (IsOffCooldown(Confiteor))
-                        return Confiteor;
+                        if (IsOffCooldown(Confiteor))
+                            return Confiteor;
                     }
                     if (InCombat() && IsOffCooldown(HolySheltron) && CanWeave(actionID))
                         return HolySheltron;
