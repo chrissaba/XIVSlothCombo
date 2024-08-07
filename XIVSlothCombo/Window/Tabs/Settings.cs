@@ -1,6 +1,6 @@
-﻿using ImGuiNET;
-using System;
+﻿using System;
 using System.Numerics;
+using ImGuiNET;
 using XIVSlothCombo.Attributes;
 using XIVSlothCombo.Services;
 

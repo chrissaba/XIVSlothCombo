@@ -1,7 +1,11 @@
+using System;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Statuses;
+using FFXIVClientStructs.FFXIV.Client.UI;
 using XIVSlothCombo.Combos.PvE.Content;
+using XIVSlothCombo.Core;
 using XIVSlothCombo.CustomComboNS;
+using XIVSlothCombo.Data;
 
 namespace XIVSlothCombo.Combos.PvE
 {

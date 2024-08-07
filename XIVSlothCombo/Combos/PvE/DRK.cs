@@ -1,10 +1,13 @@
+using System.Diagnostics.CodeAnalysis;
 using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.Statuses;
 using XIVSlothCombo.Combos.PvE.Content;
 using XIVSlothCombo.Core;
 using XIVSlothCombo.CustomComboNS;
 
 namespace XIVSlothCombo.Combos.PvE
 {
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     internal static class DRK
     {
         public const byte JobID = 32;
@@ -53,6 +56,7 @@ namespace XIVSlothCombo.Combos.PvE
 
         #endregion
 
+        [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
         public static class Buffs
         {
             public const ushort
@@ -75,6 +79,7 @@ namespace XIVSlothCombo.Combos.PvE
                 Placeholder = 1;
         }
 
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public static class Config
         {
             public const string

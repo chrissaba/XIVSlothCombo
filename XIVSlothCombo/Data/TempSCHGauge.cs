@@ -2,7 +2,10 @@
 using Dalamud.Game.ClientState.JobGauge.Types;
 using ECommons.DalamudServices;
 using System;
+using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
+using XIVSlothCombo.Services;
+using XIVSlothCombo.Window.Tabs;
 
 namespace XIVSlothCombo.Data;
 
@@ -20,7 +23,7 @@ public unsafe class TmpSCHGauge
 
     public TmpSCHGauge()
     {
-        Struct = (TmpScholarGauge*)Svc.Gauges.Get<SCHGauge>().Address;
+        Struct = (TmpScholarGauge*)Service.JobGauges.Get<SCHGauge>().Address;
     }
 }
 
@@ -100,7 +103,7 @@ public enum CreatureFlags : byte
     Pom = 1,
     Wings = 2,
     Claw = 4,
-
+   
     MooglePortrait = 16,
     MadeenPortrait = 32,
 }

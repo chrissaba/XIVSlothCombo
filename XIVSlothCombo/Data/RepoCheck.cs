@@ -1,6 +1,6 @@
-﻿using ECommons.DalamudServices;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.IO;
+using XIVSlothCombo.Services;
 
 namespace XIVSlothCombo.Data
 {
@@ -13,7 +13,7 @@ namespace XIVSlothCombo.Data
     {
         public static RepoCheck? FetchCurrentRepo()
         {
-            FileInfo? f = Svc.PluginInterface.AssemblyLocation;
+            FileInfo? f = Service.Interface.AssemblyLocation;
             var manifest = Path.Join(f.DirectoryName, "XIVSlothCombo.json");
 
             if (File.Exists(manifest))

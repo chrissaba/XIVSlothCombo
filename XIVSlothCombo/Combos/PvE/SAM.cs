@@ -721,7 +721,7 @@ namespace XIVSlothCombo.Combos.PvE
                             return Zanshin;
                         if (IsEnabled(CustomComboPreset.SAM_AoE_MangetsuCombo_Hagakure) && OriginalHook(Iaijutsu) == Setsugekka && LevelChecked(Hagakure))
                             return Hagakure;
-
+                      
                         if (IsEnabled(CustomComboPreset.SAM_AoE_MangetsuCombo_Guren) && ActionReady(Guren) && gauge.Kenki >= 25)
                             return Guren;
 

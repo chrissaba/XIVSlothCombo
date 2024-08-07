@@ -2,7 +2,7 @@
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
-using System.Collections;
+using ECommons.DalamudServices;
 using System.Collections.Generic;
 using System.Linq;
 using XIVSlothCombo.Combos.PvE.Content;
@@ -216,7 +216,7 @@ namespace XIVSlothCombo.Combos.PvE
                         !HasEffect(Buffs.Lightspeed))
                         return Lightspeed;
 
-
+                    
 
                     if (IsEnabled(CustomComboPreset.AST_DPS_Lucid) &&
                         ActionReady(All.LucidDreaming) &&
@@ -252,7 +252,7 @@ namespace XIVSlothCombo.Combos.PvE
                     if (IsEnabled(CustomComboPreset.AST_DPS_Oracle) &&
                         HasEffect(Buffs.Divining) &&
                         CanSpellWeave(actionID))
-                        return Oracle;
+                        return Oracle; 
 
                     //Minor Arcana / Lord of Crowns
                     if (ActionReady(OriginalHook(MinorArcana)) &&
@@ -266,19 +266,23 @@ namespace XIVSlothCombo.Combos.PvE
                         //Combust
                         if (IsEnabled(CustomComboPreset.AST_ST_DPS_CombustUptime) &&
                             !GravityList.Contains(actionID) &&
-                            LevelChecked(Combust) &&
-                            CombustList.TryGetValue(OriginalHook(Combust), out ushort dotDebuffID))
+                            LevelChecked(Combust))
                         {
+                            //Grab current DoT via OriginalHook, grab it's fellow debuff ID from Dictionary, then check for the debuff
+                            uint dot = OriginalHook(Combust);
+                            Status? dotDebuff = FindTargetEffect(CombustList[dot]);
+                            float refreshtimer = Config.AST_ST_DPS_CombustUptime_Adv ? Config.AST_ST_DPS_CombustUptime_Threshold : 3;
+
                             if (IsEnabled(CustomComboPreset.AST_Variant_SpiritDart) &&
                                 IsEnabled(Variant.VariantSpiritDart) &&
-                                GetDebuffRemainingTime(Variant.Debuffs.SustainedDamage) <= 3 &&
+                                (sustainedDamage is null || sustainedDamage?.RemainingTime <= 3) &&
                                 CanSpellWeave(actionID))
                                 return Variant.VariantSpiritDart;
-                            
-                            float refreshtimer = Config.AST_ST_DPS_CombustUptime_Adv ? Config.AST_ST_DPS_CombustUptime_Threshold : 3;
-                            if (GetDebuffRemainingTime(dotDebuffID) <= refreshtimer &&
+
+
+                            if ((dotDebuff is null || dotDebuff.RemainingTime <= refreshtimer) &&
                                 GetTargetHPPercent() > Config.AST_DPS_CombustOption)
-                                return OriginalHook(Combust);
+                                return dot;
 
                             //AlterateMode idles as Malefic
                             if (AlternateMode) return OriginalHook(Malefic);
