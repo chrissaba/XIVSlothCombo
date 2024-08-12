@@ -39,8 +39,9 @@ namespace XIVSlothCombo.Combos.PvP
         internal class Buffs
         {
             public const ushort
-            Resilience = 3248,
-            Guard = 3054;
+                Sprint = 1342,
+                Resilience = 3248,
+                Guard = 3054;
         }
 
         // Lists of Excluded skills 
