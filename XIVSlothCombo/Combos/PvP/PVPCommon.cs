@@ -46,7 +46,7 @@ namespace XIVSlothCombo.Combos.PvP
 
         // Lists of Excluded skills 
         internal static readonly List<uint>
-            MovmentSkills = new() { WARPvP.Onslaught, NINPvP.Shukuchi, DNCPvP.EnAvant, MNKPvP.ThunderClap, RDMPvP.CorpsACorps, RDMPvP.Displacement, SGEPvP.Icarus, RPRPvP.HellsIngress, RPRPvP.Regress, BRDPvP.RepellingShot, BLMPvP.AetherialManipulation, DRGPvP.ElusiveJump, GNBPvP.RoughDivide, 29130, 29469, 29537, 29553, 29497, 29499, 29097, 29415, 29704, 29515, 29266, 29260, 29512, 29508, DRKPvP.BlackestNight, GNBPvP.JunctionedCast, DRGPvP.HorridRoar, SAMPvP.Soten, SAMPvP.Chiten, MNKPvP.RiddleOfEarth, MNKPvP.EarthsReply, DNCPvP.CuringWaltz, DNCPvP.Contradance, PLDPvP.Phalanx, PLDPvP.HolySheltron, DRKPvP.Quietus, DRKPvP.SaltAndDarkness, DRKPvP.SaltedEarth, DRKPvP.Plunge },
+            MovmentSkills = new() { WARPvP.Onslaught, NINPvP.Shukuchi, DNCPvP.EnAvant, MNKPvP.ThunderClap, RDMPvP.CorpsACorps, RDMPvP.Displacement, SGEPvP.Icarus, RPRPvP.HellsIngress, RPRPvP.Regress, BRDPvP.RepellingShot, BLMPvP.AetherialManipulation, DRGPvP.ElusiveJump, GNBPvP.RoughDivide, 29130, 29469, 29537, 29553, 29497, 29499, 29097, 29415, 29704, 29515, 29266, 29260, 29512, 29508, DRKPvP.BlackestNight, GNBPvP.JunctionedCast, DRGPvP.HorridRoar, SAMPvP.Soten, SAMPvP.Chiten, MNKPvP.RiddleOfEarth, MNKPvP.EarthsReply, DNCPvP.CuringWaltz, DNCPvP.Contradance, PLDPvP.Phalanx, PLDPvP.HolySheltron, DRKPvP.Quietus, DRKPvP.SaltAndDarkness, DRKPvP.SaltedEarth, DRKPvP.Plunge, VPRPvP.Slither, VPRPvP.Backlash, VPRPvP.WorldSwallower, VPRPvP.SnakeScales },
             GlobalSkills = new() { Teleport, Guard, Recuperate, Purify, StandardElixir, Sprint };
 
         internal class GlobalEmergencyHeals : CustomCombo
@@ -159,7 +159,7 @@ namespace XIVSlothCombo.Combos.PvP
         internal static readonly List<uint>
                     ExemptionList = new List<uint>()
                     {
- WARPvP.Onslaught, NINPvP.Shukuchi, DNCPvP.EnAvant, MNKPvP.ThunderClap, RDMPvP.CorpsACorps, RDMPvP.Displacement, SGEPvP.Icarus, RPRPvP.HellsIngress, RPRPvP.Regress, BRDPvP.RepellingShot, BLMPvP.AetherialManipulation, DRGPvP.ElusiveJump, GNBPvP.RoughDivide, 29130, 29469, 29537, 29553, 29497, 29499, 29097, 29415, 29704, 29515, 29266, 29260, 29512, 29508, DRKPvP.BlackestNight, GNBPvP.JunctionedCast, DRGPvP.HorridRoar, SAMPvP.Soten, SAMPvP.Chiten, MNKPvP.RiddleOfEarth, MNKPvP.EarthsReply, DNCPvP.CuringWaltz, DNCPvP.Contradance, PLDPvP.Phalanx, PLDPvP.HolySheltron, DRKPvP.Quietus, DRKPvP.SaltedEarth, DRKPvP.SaltAndDarkness, DRKPvP.Plunge
+ WARPvP.Onslaught, NINPvP.Shukuchi, DNCPvP.EnAvant, MNKPvP.ThunderClap, RDMPvP.CorpsACorps, RDMPvP.Displacement, SGEPvP.Icarus, RPRPvP.HellsIngress, RPRPvP.Regress, BRDPvP.RepellingShot, BLMPvP.AetherialManipulation, DRGPvP.ElusiveJump, GNBPvP.RoughDivide, 29130, 29469, 29537, 29553, 29497, 29499, 29097, 29415, 29704, 29515, 29266, 29260, 29512, 29508, DRKPvP.BlackestNight, GNBPvP.JunctionedCast, DRGPvP.HorridRoar, SAMPvP.Soten, SAMPvP.Chiten, MNKPvP.RiddleOfEarth, MNKPvP.EarthsReply, DNCPvP.CuringWaltz, DNCPvP.Contradance, PLDPvP.Phalanx, PLDPvP.HolySheltron, DRKPvP.Quietus, DRKPvP.SaltedEarth, DRKPvP.SaltAndDarkness, DRKPvP.Plunge, VPRPvP.Slither, VPRPvP.Backlash, VPRPvP.WorldSwallower, VPRPvP.SnakeScales
                     };
 
 

@@ -21,6 +21,10 @@ namespace XIVSlothCombo.Combos.PvP
             SecondGeneration = 39170,
             ThirdGeneration = 39171,
             FourthGeneration = 39172,
+            Slither = 39184,
+            Backlash = 39186,
+            WorldSwallower = 39190,
+            SnakeScales = 39185,
             Ouroboros = 39173;
 
         internal class VPRPvP_Burst : CustomCombo
