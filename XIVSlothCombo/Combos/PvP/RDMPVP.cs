@@ -35,7 +35,8 @@ namespace XIVSlothCombo.Combos.PvP
                 EnchantedRedoublement = 3236,
                 EnchantedZwerchhau = 3235,
                 VermilionRadiance = 3233,
-                MagickBarrier = 3240;
+                MagickBarrier = 3240,
+                Monomachy = 3242;
         }
 
         internal class RDMPvP_BurstMode : CustomCombo
@@ -47,13 +48,13 @@ namespace XIVSlothCombo.Combos.PvP
                 if (actionID is Verstone or Verfire)
                 {
 
-                    if (!GetCooldown(Frazzle).IsCooldown && HasEffect(Buffs.BlackShift) && IsNotEnabled(CustomComboPreset.RDMPvP_FrazzleOption))
+                    if (!GetCooldown(Frazzle).IsCooldown && HasEffect(Buffs.BlackShift) && InMeleeRange() && IsNotEnabled(CustomComboPreset.RDMPvP_FrazzleOption))
                         return OriginalHook(Frazzle);
 
                     if (!GetCooldown(Resolution).IsCooldown)
                         return OriginalHook(Resolution);
 
-                    if (!InMeleeRange() && GetCooldown(CorpsACorps).RemainingCharges > 0 && !GetCooldown(EnchantedRiposte).IsCooldown)
+                    if (InMeleeRange() && GetCooldown(CorpsACorps).RemainingCharges > 0 && !TargetHasEffect(Buffs.Monomachy) && !GetCooldown(EnchantedRiposte).IsCooldown)
                         return OriginalHook(CorpsACorps);
 
                     if (InMeleeRange())
